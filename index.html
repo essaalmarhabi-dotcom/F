@@ -8,14 +8,14 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="الالتزامات">
 <meta name="theme-color" content="#2b2f86">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232b2f86'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle'%3E%F0%9F%92%B3%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://w3.org' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232b2f86'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle'%3E%F0%9F%92%B3%3C/text%3E%3C/svg%3E">
 <style>
 :root{--bg:#f4f5fa;--c:#fff;--t:#1d2150;--m:#666b8d;--p:#2b2f86;--g:#e8b53a;--ok:#177a52;--bad:#b83227;--wr:#9a6410;--bd:#e1e3ef;--nav:#2b2f86;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101230;--c:#1a1d46;--t:#eceefc;--m:#a2a8d6;--p:#9aa0ff;--bd:#2c3068;--ok:#4cc38a;--bad:#ff8a7d;--wr:#f1c15a;--nav:#171a4a}}
 :root[data-theme="dark"]{--bg:#101230;--c:#1a1d46;--t:#eceefc;--m:#a2a8d6;--p:#9aa0ff;--bd:#2c3068;--ok:#4cc38a;--bad:#ff8a7d;--wr:#f1c15a;--nav:#171a4a}
 *{box-sizing:border-box}html,body{height:100%;margin:0}body{min-height:100vh;min-height:100dvh}
 body{background:var(--bg);color:var(--t);font:15px/1.6 system-ui,"Segoe UI",Tahoma,sans-serif;display:flex}
-nav{background:var(--nav);color:#fff;width:210px;padding:16px 10px;display:flex;flex-direction:column;gap:4px;flex:none;overflow:auto}
+nav{background:var(--nav);color:#fff;width:210px;padding:16px 10px;display:flex;flex-direction:column;gap:4px;flex:none;overflow:auto;transition: transform 0.3s ease;}
 nav h1{font-size:17px;margin:4px 8px 14px;color:var(--g)}
 nav a{color:#dfe1ff;text-decoration:none;padding:10px 12px;border-radius:10px;cursor:pointer}
 nav a.on,nav a:hover{background:rgba(255,255,255,.14);color:#fff}
@@ -42,16 +42,69 @@ th{color:var(--m);font-size:13px;font-weight:600}tr.l{cursor:pointer}tr.l:hover{
 .err{background:rgba(184,50,39,.12);color:var(--bad);padding:8px 12px;border-radius:10px;margin-bottom:10px}
 .bar{height:8px;background:var(--bd);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:var(--g)}
 
-/* التعديل المصلح والنهائي لتجاوب شاشات الجوال العمودية */
+/* زر القائمة يكون مخفياً في الشاشات الكبيرة */
+.menu-btn {
+  display: none;
+  background: var(--p);
+  color: #fff;
+  border: 0;
+  padding: 8px 14px;
+  font-size: 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+/* التعديل المصلح للشاشات الصغيرة لتصبح القائمة جانبية ومخفية */
 @media(max-width:800px){
   input,select,textarea{font-size:16px}
   #sync{display:none}
-  body{flex-direction:column !important} /* إجبار العناصر على الترتيب الرأسي المريح */
-  nav{width:100% !important;flex-direction:row !important;padding:6px;overflow-x:auto;order:-1} /* شريط التنقل العلوي للجوال */
-  nav h1{display:none}
-  nav a{padding:8px 10px;font-size:13px;white-space:nowrap}
-  main{padding:14px;width:100% !important;max-width:100% !important;box-sizing:border-box}
-  .grid{grid-template-columns:1fr !important} /* عرض الكروت بشكل كامل ومريح للعين */
+  body{flex-direction:column !important; position: relative;}
+  
+  /* إظهار زر القائمة في الجوال */
+  .menu-btn {
+    display: inline-block;
+    align-self: flex-start;
+  }
+
+  /* جعل القائمة تظهر من اليمين وتغطي الطول الكامل عند فتحها */
+  nav{
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 240px !important;
+    height: 100vh;
+    z-index: 10000;
+    flex-direction: column !important;
+    padding: 20px 14px;
+    transform: translateX(100%); /* إخفاء القائمة خارج الشاشة يميناً */
+  }
+  
+  /* كلاس لتفعيل ظهور القائمة عند الضغط على الزر */
+  nav.open {
+    transform: translateX(0); /* إدخال القائمة للشاشة */
+  }
+  
+  nav h1{display:block; margin-bottom: 20px;}
+  nav a{padding:12px 14px; font-size:15px; width: 100%;}
+  main{padding:14px; width:100% !important; max-width:100% !important; box-sizing:border-box}
+  .grid{grid-template-columns:1fr !important}
+  
+  /* زر إضافي لإغلاق القائمة من الداخل */
+  .close-btn {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    border: 0;
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    text-align: center;
+  }
+}
+@media(min-width:801px){
+  .close-btn { display: none; }
 }
 </style>
 <script>
@@ -66,14 +119,37 @@ window.addEventListener('unhandledrejection',function(e){if(!window.__ok)show('p
 <link rel="apple-touch-icon" href="icon-180.png">
 </head>
 <body>
-<nav id="nav"></nav>
+
+<!-- إضافة زر القائمة العلوي للجوال -->
+<button class="menu-btn" id="menuToggle">☰ القائمة</button>
+
+<nav id="nav">
+  <!-- زر إغلاق القائمة بالداخل -->
+  <button class="close-btn" id="menuClose">✕ إغلاق</button>
+</nav>
+
 <main id="app"></main>
+
+<!-- كود لتشغيل فتح وإغلاق القائمة الجانبية -->
+<script>
+  document.getElementById('menuToggle').addEventListener('click', function() {
+    document.getElementById('nav').classList.add('open');
+  });
+  
+  document.getElementById('menuClose').addEventListener('click', function() {
+    document.getElementById('nav').classList.remove('open');
+  });
+
+  // إغلاق القائمة تلقائياً عند الضغط على أي رابط داخلها
+  document.getElementById('nav').addEventListener('click', function(e) {
+    if(e.target.tagName === 'A') {
+      document.getElementById('nav').classList.remove('open');
+    }
+  });
+</script>
+
 <script>
 const D={app:['مدير الالتزامات','Commitments'],dash:['الرئيسية','Dashboard'],coms:['الالتزامات','Commitments'],pays:['الدفعات','Payments'],accs:['الحسابات','Accounts'],ents:['الجهات','Entities'],cats:['التصنيفات','Categories'],reps:['التقارير','Reports'],sets:['الإعدادات','Settings'],
 new:['التزام جديد','New commitment'],pay:['تسجيل دفعة','Record payment'],save:['حفظ','Save'],add:['إضافة','Add'],void:['إبطال','Void'],name:['الاسم','Name'],ent:['الجهة','Entity'],cat:['التصنيف','Category'],total:['الإجمالي','Total'],paid:['المدفوع','Paid'],rem:['المتبقي','Remaining'],status:['الحالة','Status'],start:['البداية','Start'],end:['النهاية','End'],date:['التاريخ','Date'],amt:['المبلغ','Amount'],meth:['طريقة الدفع','Method'],note:['ملاحظات','Notes'],acc:['الحساب','Account'],due:['الاستحقاق','Due'],
 s_paid:['مدفوع','Paid'],s_overdue:['متأخر','Overdue'],s_due:['مستحق','Due'],s_upcoming:['لم يحن','Upcoming'],partial:['جزئي','Partial'],c_active:['نشط','Active'],c_scheduled:['مجدول','Scheduled'],c_completed:['مكتمل','Completed'],
 n:['عدد الأقساط العادية','Regular installments'],first:['تاريخ أول قسط','First due date'],down:['دفعة مقدمة','Down payment'],downd:['تاريخها','Its date'],fin:['دفعة أخيرة','Final payment'],find:['تاريخها','Its date'],
-et_bank:['بنك','Bank'],et_fbank:['بنك أجنبي','Foreign bank'],et_fin:['شركة تمويل','Finance company'],et_svc:['شركة خدمات مالية','Financial services'],et_crowd:['تمويل جماعي','Crowdfunding'],et_micro:['تمويل أصغر','Microfinance'],et_inst:['مكتب تقسيط','Installment office'],et_com:['شركة تجارية','Trading company'],et_co:['شركة','Company'],et_gov:['جهة حكومية','Government'],et_govfin:['جهة تمويل حكومية','Gov. fina']}
-</script>
-</body>
-</html>

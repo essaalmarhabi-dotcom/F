@@ -2,7 +2,6 @@
 <html lang="ar" dir="rtl"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>مدير الالتزامات</title>
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="الالتزامات"><meta name="theme-color" content="#2b2f86">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://w3.org' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232b2f86'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle'%3E%F0%9F%92%B3%3C/text%3E%3C/svg%3E">
 <style>
@@ -37,10 +36,52 @@ th{color:var(--m);font-size:13px;font-weight:600}tr.l{cursor:pointer}tr.l:hover{
 #sync{margin-top:auto;padding:8px 12px;font-size:12px;color:#cfd2ff}
 .err{background:rgba(184,50,39,.12);color:var(--bad);padding:8px 12px;border-radius:10px;margin-bottom:10px}
 .bar{height:8px;background:var(--bd);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:var(--g)}
-@media(max-width:800px){input,select,textarea{font-size:16px}#sync{display:none}body{flex-direction:column-reverse}nav{width:100%;flex-direction:row;padding:6px;overflow-x:auto}nav h1{display:none}nav a{padding:8px 10px;font-size:13px;white-space:nowrap}main{padding:14px}}
+
+/* تعديل الـ CSS الآمن لشاشات الجوال */
+@media(max-width:800px){
+  input,select,textarea{font-size:16px}
+  #sync{display:none !important}
+  body{flex-direction:column !important; position: relative; padding-bottom: 60px !important;}
+  
+  /* جعل القائمة شريط سفلي ذكي يختفي ويفتح باللمس لحماية المساحة */
+  nav{
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    height: 48px !important; /* حجم صغير جداً يظهر الأزرار العلوية فقط */
+    background: var(--nav) !important;
+    z-index: 99999 !important;
+    flex-direction: row !important;
+    padding: 4px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    transition: height 0.3s ease !important;
+    border-top: 3px solid var(--g) !important;
+  }
+  
+  /* تفتح القائمة بالكامل عند لمسها أو الضغط عليها لتختار القسم */
+  nav:active, nav:hover, nav:focus-within {
+    height: auto !important;
+    max-height: 260px !important;
+    flex-wrap: wrap !important;
+    overflow-y: auto !important;
+  }
+  
+  nav h1{display:none !important}
+  nav a{
+    padding: 6px 12px !important; 
+    font-size: 13px !important; 
+    white-space: nowrap !important;
+    display: inline-block !important;
+  }
+  main{padding:14px; width:100% !important; max-width:100% !important; box-sizing:border-box}
+  .grid{grid-template-columns:1fr !important}
+}
 </style><script>
 (function(){var box;function show(m){try{if(!box){box=document.createElement('div');box.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;background:#fff;color:#b00020;padding:20px;font:15px/1.7 -apple-system,Helvetica,sans-serif;direction:rtl;overflow:auto';(document.body||document.documentElement).appendChild(box)}
-box.innerHTML='<h3>\u26A0 \u062A\u0639\u0630\u0651\u0631 \u062A\u0634\u063A\u064A\u0644 \u0627\u0644\u0628\u063برنامج</h3><p>\u0623\u0631\u0633\u0644 \u0644\u0642\u0637\u0629 \u0647\u0630\u0647 \u0627\u0644\u0634\u0627\u0634\u0629.</p><pre dir="ltr" style="white-space:pre-wrap;font-size:12px;color:#333">'+String(m).replace(/</g,'&lt;')+'\n'+navigator.userAgent+'\nsecure='+window.isSecureContext+'  protocol='+location.protocol+'  subtle='+!!(window.crypto&&window.crypto.subtle)+'</pre>'}catch(e){}}
+box.innerHTML='<h3>\u26A0 \u062A\u0639\u0630\u0651\u0631 \u062A\u0634\u063A\u064A\u0644 \u0627\u0644\u0628\u0631\u0646\u0627\u0645\u062C</h3><p>\u0623\u0631\u0633\u0644 \u0644\u0642\u0637\u0629 \u0647\u0630\u0647 \u0627\u0644\u0634\u0627\u0634\u0629.</p><pre dir="ltr" style="white-space:pre-wrap;font-size:12px;color:#333">'+String(m).replace(/</g,'&lt;')+'\n'+navigator.userAgent+'\nsecure='+window.isSecureContext+'  protocol='+location.protocol+'  subtle='+!!(window.crypto&&window.crypto.subtle)+'</pre>'}catch(e){}}
 window.__ok=false;window.__show=show;
 window.addEventListener('error',function(e){if(!window.__ok)show((e.message||'error')+'  @'+(e.lineno||'')+':'+(e.colno||''))});
 window.addEventListener('unhandledrejection',function(e){if(!window.__ok)show('promise: '+((e.reason&&e.reason.message)||e.reason))});})();

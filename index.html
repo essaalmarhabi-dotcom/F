@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مدير الالتزامات</title>
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="الالتزامات"><meta name="theme-color" content="#2b2f86">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232b2f86'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle'%3E%F0%9F%92%B3%3C/text%3E%3C/svg%3E">
+<style>
+:root{--bg:#f4f5fa;--c:#fff;--t:#1d2150;--m:#666b8d;--p:#2b2f86;--g:#e8b53a;--ok:#177a52;--bad:#b83227;--wr:#9a6410;--bd:#e1e3ef;--nav:#2b2f86;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101230;--c:#1a1d46;--t:#eceefc;--m:#a2a8d6;--p:#9aa0ff;--bd:#2c3068;--ok:#4cc38a;--bad:#ff8a7d;--wr:#f1c15a;--nav:#171a4a}}
+:root[data-theme="dark"]{--bg:#101230;--c:#1a1d46;--t:#eceefc;--m:#a2a8d6;--p:#9aa0ff;--bd:#2c3068;--ok:#4cc38a;--bad:#ff8a7d;--wr:#f1c15a;--nav:#171a4a}
+*{box-sizing:border-box}html,body{height:100%;margin:0}body{min-height:100vh;min-height:100dvh}
+body{background:var(--bg);color:var(--t);font:15px/1.6 system-ui,"Segoe UI",Tahoma,sans-serif;display:flex}
+nav{background:var(--nav);color:#fff;width:210px;padding:16px 10px;display:flex;flex-direction:column;gap:4px;flex:none;overflow:auto}
+nav h1{font-size:17px;margin:4px 8px 14px;color:var(--g)}
+nav a{color:#dfe1ff;text-decoration:none;padding:10px 12px;border-radius:10px;cursor:pointer}
+nav a.on,nav a:hover{background:rgba(255,255,255,.14);color:#fff}
+main{flex:1;overflow:auto;padding:20px;max-width:1100px;margin-inline:auto;width:100%}
+h2{margin:0 0 14px;font-size:22px}
+.top{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
+.card{background:var(--c);border:1px solid var(--bd);border-radius:14px;padding:14px}
+.k{color:var(--m);font-size:13px}.v{font-size:21px;font-weight:700;font-variant-numeric:tabular-nums}
+.btn{background:var(--p);color:#fff;border:0;border-radius:10px;padding:9px 16px;font:inherit;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.25)}
+.btn.g{background:var(--g);color:#2a2200}.btn.s{padding:4px 10px;font-size:13px;box-shadow:none}.btn.o{background:transparent;color:var(--p);border:1px solid var(--bd);box-shadow:none}
+input,select{font:inherit;padding:8px 10px;border:1px solid var(--bd);border-radius:10px;background:var(--c);color:var(--t);width:100%}
+label{display:block;font-size:13px;color:var(--m);margin-bottom:10px}
+.f{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 14px}
+.w{overflow-x:auto}table{border-collapse:collapse;width:100%}
+th,td{padding:9px 10px;text-align:start;border-bottom:1px solid var(--bd);white-space:nowrap;font-variant-numeric:tabular-nums}
+th{color:var(--m);font-size:13px;font-weight:600}tr.l{cursor:pointer}tr.l:hover{background:rgba(120,120,200,.08)}
+.chip{display:inline-block;padding:1px 10px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid currentColor}
+.paid,.completed{color:var(--ok)}.cancelled{color:var(--m)}.suspended{color:var(--wr)}.overdue{color:var(--bad)}.due,.partial{color:var(--wr)}.upcoming,.scheduled,.active{color:var(--p)}
+.auth{max-width:440px;margin:6vh auto}.auth h1{margin:0 0 4px;font-size:24px}.pw{display:flex;gap:6px}.pw input{flex:1}.ok{background:rgba(23,122,82,.14);color:var(--ok);padding:8px 12px;border-radius:10px;margin-bottom:10px}.rc{font:700 20px/1.6 ui-monospace,Menlo,monospace;direction:ltr;text-align:center;background:var(--bg);border:2px dashed var(--g);border-radius:12px;padding:14px;user-select:all}body.locked nav{display:none}hr{border:0;border-top:1px solid var(--bd);margin:14px 0}
+.gate{max-width:560px;margin:40px auto;text-align:center}.gate h2{margin-top:0}
+.warn{background:rgba(232,181,58,.18);color:var(--wr);padding:8px 12px;border-radius:10px;margin-bottom:10px}
+#sync{margin-top:auto;padding:8px 12px;font-size:12px;color:#cfd2ff}
+.err{background:rgba(184,50,39,.12);color:var(--bad);padding:8px 12px;border-radius:10px;margin-bottom:10px}
+.bar{height:8px;background:var(--bd);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:var(--g)}
+@media(max-width:800px){input,select,textarea{font-size:16px}#sync{display:none}body{flex-direction:column-reverse}nav{width:100%;flex-direction:row;padding:6px;overflow-x:auto}nav h1{display:none}nav a{padding:8px 10px;font-size:13px;white-space:nowrap}main{padding:14px}}
+</style><script>
+(function(){var box;function show(m){try{if(!box){box=document.createElement('div');box.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;background:#fff;color:#b00020;padding:20px;font:15px/1.7 -apple-system,Helvetica,sans-serif;direction:rtl;overflow:auto';(document.body||document.documentElement).appendChild(box)}
+box.innerHTML='<h3>\u26A0 \u062A\u0639\u0630\u0651\u0631 \u062A\u0634\u063A\u064A\u0644 \u0627\u0644\u0628\u0631\u0646\u0627\u0645\u062C</h3><p>\u0623\u0631\u0633\u0644 \u0644\u0642\u0637\u0629 \u0647\u0630\u0647 \u0627\u0644\u0634\u0627\u0634\u0629.</p><pre dir="ltr" style="white-space:pre-wrap;font-size:12px;color:#333">'+String(m).replace(/</g,'&lt;')+'\n'+navigator.userAgent+'\nsecure='+window.isSecureContext+'  protocol='+location.protocol+'  subtle='+!!(window.crypto&&window.crypto.subtle)+'</pre>'}catch(e){}}
+window.__ok=false;window.__show=show;
+window.addEventListener('error',function(e){if(!window.__ok)show((e.message||'error')+'  @'+(e.lineno||'')+':'+(e.colno||''))});
+window.addEventListener('unhandledrejection',function(e){if(!window.__ok)show('promise: '+((e.reason&&e.reason.message)||e.reason))});})();
+</script>
+<noscript><div style="padding:24px;font:16px/1.8 -apple-system,sans-serif;direction:rtl;color:#b00020"><b>JavaScript غير مفعّل.</b><br>إن فتحت الملف من تطبيق «الملفات» فهذه معاينة سريعة لا تشغّل البرامج. افتحه من متصفح سفاري عبر رابط HTTPS.</div></noscript>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+</head><body>
+<nav id="nav"></nav><main id="app"></main>
+<script>
+const D={app:['مدير الالتزامات','Commitments'],dash:['الرئيسية','Dashboard'],coms:['الالتزامات','Commitments'],pays:['الدفعات','Payments'],accs:['الحسابات','Accounts'],ents:['الجهات','Entities'],cats:['التصنيفات','Categories'],reps:['التقارير','Reports'],sets:['الإعدادات','Settings'],
+new:['التزام جديد','New commitment'],pay:['تسجيل دفعة','Record payment'],save:['حفظ','Save'],add:['إضافة','Add'],void:['إبطال','Void'],name:['الاسم','Name'],ent:['الجهة','Entity'],cat:['التصنيف','Category'],total:['الإجمالي','Total'],paid:['المدفوع','Paid'],rem:['المتبقي','Remaining'],status:['الحالة','Status'],start:['البداية','Start'],end:['النهاية','End'],date:['التاريخ','Date'],amt:['المبلغ','Amount'],meth:['طريقة الدفع','Method'],note:['ملاحظات','Notes'],acc:['الحساب','Account'],due:['الاستحقاق','Due'],
+s_paid:['مدفوع','Paid'],s_overdue:['متأخر','Overdue'],s_due:['مستحق','Due'],s_upcoming:['لم يحن','Upcoming'],partial:['جزئي','Partial'],c_active:['نشط','Active'],c_scheduled:['مجدول','Scheduled'],c_completed:['مكتمل','Completed'],
+n:['عدد الأقساط العادية','Regular installments'],first:['تاريخ أول قسط','First due date'],down:['دفعة مقدمة','Down payment'],downd:['تاريخها','Its date'],fin:['دفعة أخيرة','Final payment'],find:['تاريخها','Its date'],
+et_bank:['بنك','Bank'],et_fbank:['بنك أجنبي','Foreign bank'],et_fin:['شركة تمويل','Finance company'],et_svc:['شركة خدمات مالية','Financial services'],et_crowd:['تمويل جماعي','Crowdfunding'],et_micro:['تمويل أصغر','Microfinance'],et_inst:['مكتب تقسيط','Installment office'],et_com:['شركة تجارية','Trading company'],et_co:['شركة','Company'],et_gov:['جهة حكومية','Government'],et_govfin:['جهة تمويل حكومية','Gov. financing'],et_govre:['جهة حكومية / تمويل عقاري','Gov. / real-estate finance'],et_emp:['جهة العمل','Employer'],et_ind:['فرد','Individual'],et_bill:['فاتورة','Bill'],et_oth:['أخرى','Other'],pick:['اختر الجهة…','Select entity…'],etype:['نوع الجهة','Entity type'],at_bank:['بنكي','Bank'],at_wallet:['محفظة','Wallet'],at_cash:['نقد','Cash'],at_credit_card:['بطاقة ائتمان','Credit card'],
+m_transfer:['تحويل','Transfer'],m_mada:['مدى','Mada'],m_card:['بطاقة','Card'],m_cash:['نقد','Cash'],m_cheque:['شيك','Cheque'],
+c_housing:['سكن','Housing'],c_car:['سيارة','Car'],c_finance:['تمويل','Finance'],c_card:['بطاقة ائتمانية','Credit card'],c_personal:['دين شخصي','Personal debt'],c_edu:['تعليم','Education'],c_services:['خدمات','Services'],c_invest:['استثمار','Investment'],c_sub:['اشتراك','Subscription'],c_other:['أخرى','Other'],
+e_req:['أكمل الحقول المطلوبة','Fill the required fields'],e_num:['مبلغ غير صحيح','Invalid amount'],e_future:['لا يمكن اختيار تاريخ مستقبلي','Future dates are not allowed'],e_over:['المبلغ يتجاوز المتبقي','Amount exceeds remaining'],e_sum:['المقدمة + الأخيرة تتجاوز الإجمالي أو لا توجد أقساط تغطي الباقي','Down + final exceed total, or nothing covers the rest'],e_acc:['أنشئ حسابًا أولًا','Create an account first'],
+bal:['الرصيد','Balance'],open:['الرصيد الافتتاحي (سالب للبطاقة)','Opening balance (negative for cards)'],type:['النوع','Type'],search:['بحث…','Search…'],all:['الكل','All'],tot:['إجمالي الالتزامات','Total commitments'],od:['متأخرة','Overdue'],upc:['الدفعات القادمة','Upcoming payments'],none:['لا بيانات بعد','No data yet'],
+exp_i:['تصدير الأقساط CSV','Export installments CSV'],exp_p:['تصدير الدفعات CSV','Export payments CSV'],bk:['نسخة احتياطية','Backup'],rs:['استعادة','Restore'],lang:['English','العربية'],by_e:['حسب الجهة','By entity'],by_c:['حسب التصنيف','By category'],inst:['الأقساط','Installments'],voided:['مُبطلة','Voided'],pnow:['دفع','Pay'],
+s_cloud:['☁ محفوظ في حسابك','☁ Saved to your account'],f_com:['اسم الالتزام','Commitment title'],f_acc:['اسم الحساب','Account label'],f_ent:['اسم الجهة','Institution'],f_cat:['اسم التصنيف','Category title'],acct:['الحساب','Account'],lg_sub_login:['سجّل الدخول إلى حسابك على هذا الجهاز','Sign in to your account on this device'],lg_sub_reg:['أنشئ حسابًا جديدًا على هذا الجهاز (لا يُرسل إلى أي خادم)','Create a new account on this device (nothing is sent to a server)'],lg_email:['البريد الإلكتروني','Email'],lg_pw:['كلمة المرور','Password'],lg_pw2:['تأكيد كلمة المرور','Confirm password'],lg_btn:['دخول','Sign in'],lg_reg:['إنشاء الحساب','Create account'],lg_to_reg:['حساب جديد','New account'],lg_to_login:['لديّ حساب','I have an account'],lg_forgot:['نسيت كلمة المرور؟','Forgot password?'],lg_show:['إظهار/إخفاء','Show/Hide'],lg_busy:['… جارٍ التحقق','… Working'],lg_rcode:['رمز الاسترداد','Recovery code'],lg_newpw:['كلمة المرور الجديدة','New password'],lg_recover:['استعادة الوصول','Recover access'],lg_import:['استعادة من نسخة مشفّرة','Restore from encrypted backup'],lg_file:['ملف النسخة الاحتياطية (.cmbk)','Backup file (.cmbk)'],e_email:['بريد إلكتروني غير صحيح','Invalid email'],e_pwshort:['كلمة المرور يجب ألا تقل عن 8 أحرف','Password must be at least 8 characters'],e_pwmatch:['كلمتا المرور غير متطابقتين','Passwords do not match'],e_exists:['هذا الحساب موجود بالفعل على هذا الجهاز','This account already exists on this device'],e_login:['البريد أو كلمة المرور غير صحيحة','Wrong email or password'],e_wait:['محاولات كثيرة. انتظر قليلًا ثم حاول مجددًا','Too many attempts. Wait a moment and retry'],e_rec:['البريد أو رمز الاسترداد غير صحيح','Wrong email or recovery code'],e_wrongpw:['كلمة المرور الحالية غير صحيحة','Current password is wrong'],e_nocrypto:['التشفير غير متاح في هذا المتصفح/العنوان. افتح الملف مباشرة من الجهاز أو عبر رابط HTTPS.','Encryption is unavailable here. Open the file directly from the device or via an HTTPS link.'],e_bk:['ملف النسخة غير صالح أو كلمة المرور خاطئة','Invalid backup file or wrong password'],rc_title:['رمز الاسترداد — احفظه الآن','Recovery code — save it now'],rc_text:['هذا الرمز هو الطريقة الوحيدة لاستعادة بياناتك إن نسيت كلمة المرور، ولن يظهر مرة أخرى. اكتبه أو صوّر الشاشة واحفظه في مكان آمن بعيدًا عن هذا الجهاز. بدونه وبدون كلمة المرور لا يمكن لأحد استرجاع بياناتك.','This code is the only way to recover your data if you forget your password, and it will not be shown again. Write it down and keep it somewhere safe away from this device. Without it and the password nobody can recover your data.'],rc_ok:['حفظتُ الرمز، متابعة','I saved it, continue'],rc_copy:['نسخ','Copy'],lock:['قفل','Lock'],ac_cur:['كلمة المرور الحالية','Current password'],ac_chpw:['تغيير كلمة المرور','Change password'],ac_ok_pw:['تم تغيير كلمة المرور','Password changed'],ac_newrc:['رمز استرداد جديد','New recovery code'],ac_bkenc:['نسخة احتياطية مشفّرة','Encrypted backup'],ac_bkplain:['نسخة JSON غير مشفّرة','Unencrypted JSON copy'],ac_del:['حذف الحساب نهائيًا','Delete account permanently'],ac_delconfirm:['سيُحذف الحساب وكل بياناته من هذا الجهاز نهائيًا. هل أنت متأكد؟','This permanently deletes the account and all its data from this device. Are you sure?'],ac_delyes:['نعم، احذف نهائيًا','Yes, delete permanently'],ac_local:['بياناتك مشفّرة ومخزّنة على هذا الجهاز فقط ولا تُرسل إلى أي جهة. لا توجد مزامنة بين الأجهزة: انقل بياناتك بالنسخة الاحتياطية المشفّرة.','Your data is encrypted and stored on this device only; nothing is sent anywhere. There is no sync between devices: move data with the encrypted backup.'],w_bk:['لم تحفظ نسخة احتياطية منذ أكثر من أسبوع. بياناتك على هذا الجهاز فقط، فصدّر نسخة مشفّرة من الإعدادات.','No backup for over a week. Your data lives on this device only; export an encrypted backup from Settings.'],w_prevd:['تعذّر قراءة آخر حفظ فاستُرجعت النسخة السابقة له. تحقق من بياناتك.','The latest save could not be read; the previous copy was restored. Please check your data.'],w_lost:['تعذّر قراءة بياناتك المخزنة (تالفة). احتُفظ بالنسخة التالفة، ويمكنك الاستعادة من نسخة احتياطية.','Your stored data could not be read (corrupted). The damaged copy was kept; you can restore from a backup.'],w_ios:['على iPhone: أضف الصفحة إلى الشاشة الرئيسية (مشاركة ← إضافة إلى الشاشة الرئيسية) حتى لا يحذف سفاري بياناتك تلقائيًا بعد فترة عدم استخدام.','On iPhone: add this page to the Home Screen (Share → Add to Home Screen) so Safari does not erase its data automatically after a period of non-use.'],waived:['المعفى','Waived'],log:['السجل','Activity log'],act:['العملية','Action'],reason:['السبب','Reason'],newdate:['التاريخ الجديد','New date'],newamt:['المبلغ الجديد','New amount'],confirm:['تأكيد','Confirm'],close:['إغلاق','Close'],susp_start:['بداية التعليق','Suspension start'],susp_plan:['تاريخ الاستئناف المتوقع','Expected resume date'],res_date:['تاريخ الاستئناف','Resume date'],res_how:['الأقساط غير المسددة','Unpaid installments'],res_keep:['إبقاء التواريخ كما هي','Keep their dates'],res_shift:['إزاحتها إلى الأمام','Shift them forward'],res_months:['عدد أشهر الإزاحة','Months to shift'],a_defer:['تأجيل / تعديل التاريخ','Defer / reschedule'],a_amount:['تعديل المبلغ','Edit amount'],a_cancel:['إلغاء القسط','Cancel installment'],a_restore:['استعادة القسط','Restore installment'],a_susp:['تعليق','Suspend'],a_suspend:['تعليق الالتزام','Suspend commitment'],a_resume:['استئناف','Resume'],a_cancelc:['إلغاء الالتزام','Cancel commitment'],a_restorec:['استعادة الالتزام','Restore commitment'],a_del:['حذف','Delete'],a_settle:['تسوية مبكرة','Early settlement'],p_post:['مؤجّل','Postponed'],p_settled:['مُسوّى','Settled'],s_cancelled:['ملغى','Cancelled'],s_suspended:['مؤجل','Suspended'],c_suspended:['مؤجل','Suspended'],c_cancelled:['ملغى','Cancelled'],log_title:['سجل التغييرات','Change log'],open_date:['تاريخ الرصيد الافتتاحي','Opening date'],mv_title:['حركة على الحساب','Account movement'],trf_title:['تحويل بين حسابين','Transfer between accounts'],to_acc:['إلى حساب','To account'],k_open:['رصيد افتتاحي','Opening balance'],k_deposit:['إيداع','Deposit'],k_withdrawal:['سحب','Withdrawal'],k_adj_in:['تصحيح (+)','Adjustment (+)'],k_adj_out:['تصحيح (−)','Adjustment (−)'],k_trf_in:['تحويل وارد','Transfer in'],k_trf_out:['تحويل صادر','Transfer out'],k_payment:['دفعة','Payment'],e_reason:['السبب مطلوب','Reason is required'],e_date:['تاريخ غير صحيح','Invalid date'],e_locked:['هذا القسط مغطّى أو ملغى ولا يمكن تعديله','This installment is covered or cancelled and cannot be edited'],e_covered:['المبلغ أقل مما سُدد أو أُعفي منه','Amount is below what is already covered'],e_cov_cancel:['عليه دفعات أو إعفاء، لا يمكن إلغاؤه','It has payments or a waiver, cannot be cancelled'],e_last:['لا يمكن إلغاء آخر قسط، ألغِ الالتزام بدلًا منه','Cannot cancel the last installment; cancel the commitment instead'],e_overlap:['يوجد تعليق قائم لهذا الالتزام','A suspension is already open'],e_nodel:['لا يمكن حذف التزام عليه دفعات أو تسوية','Cannot delete a commitment with payments or a settlement'],e_cancelled:['الالتزام أو القسط ملغى','The commitment or installment is cancelled'],e_settled:['أبطل التسوية أولًا','Void the settlement first'],e_setv:['الدفعة مرتبطة بتسوية فعّالة، أبطل التسوية أولًا','This payment belongs to an active settlement; void the settlement first'],e_before:['التاريخ قبل تاريخ الرصيد الافتتاحي','Date is before the account opening date'],e_acc2:['اختر حسابًا آخر','Choose another account'],rec_new:['التزام متكرر','Recurring commitment'],rec_amt:['المبلغ الدوري','Amount per period'],rec_every:['التكرار','Repeats'],u_week:['أسبوعي','Weekly'],u_month:['شهري','Monthly'],u_quarter:['ربع سنوي','Quarterly'],u_year:['سنوي','Yearly'],rec_end:['تاريخ الانتهاء (اختياري)','End date (optional)'],rec_from:['ابدأ التتبع من الفترة الحالية (تجاهل الفترات الماضية)','Start tracking from the current period (ignore past periods)'],rec_burden:['عبء متكرر شهري','Monthly recurring burden'],a_rule:['تغيير المبلغ من تاريخ','Change amount from a date'],a_endrec:['إنهاء التكرار','End recurrence'],rule_eff:['يسري من','Effective from'],e_retro:['توجد دفعات في فترات من هذا التاريخ فصاعدًا، اختر تاريخًا أحدث','There are payments in periods from this date on; choose a later date'],e_rule_order:['تاريخ السريان يجب أن يكون بعد آخر تغيير سابق','Effective date must be after the previous change'],end_note:['أُلغي بإنهاء التكرار','Cancelled by ending the recurrence'],st_cash:['مدفوع نقدًا','Paid in cash'],e_nosettle:['التسوية المبكرة للالتزامات محددة المدة فقط','Early settlement is for fixed-term commitments only'],e_overlap2:['توجد تسوية فعّالة لهذا الالتزام','An active settlement already exists'],imp:['استيراد','Import'],imp_help:['احفظ ملف Excel بصيغة CSV UTF-8 ثم اخترها هنا. كل صف قسط، وتُجمَّع الأقساط في التزام بحسب (الالتزام + الجهة). أعمدة اختيارية: التصنيف، المدفوع، تاريخ الدفع، الحساب. لا يُكتب شيء قبل أن تؤكد.','Save your Excel as CSV UTF-8 and pick it here. Each row is an installment; rows are grouped into a commitment by (commitment + entity). Optional columns: category, paid, paid date, account. Nothing is written until you confirm.'],imp_tpl:['تنزيل قالب CSV','Download CSV template'],imp_file:['ملف CSV','CSV file'],imp_mk:['إنشاء الجهات غير الموجودة (نوع: أخرى)','Create missing entities (type: other)'],imp_prev:['معاينة','Preview'],imp_ok:['جاهز','Ready'],imp_dup:['مكرر (موجود مسبقًا)','Duplicate (already exists)'],imp_err:['أخطاء','Errors'],imp_run:['استيراد الجاهز فقط','Import ready ones only'],imp_done:['تم الاستيراد','Imported'],imp_undo:['تراجع عن آخر استيراد','Undo last import'],e_undo:['لا يمكن التراجع: توجد دفعات أو تسويات أخرى على هذه الالتزامات','Cannot undo: other payments or settlements exist on these commitments'],ie_name:['اسم الالتزام ناقص','missing commitment name'],ie_ent:['الجهة ناقصة','missing entity'],ie_date:['تاريخ غير صحيح','invalid date'],ie_amount:['مبلغ غير صحيح','invalid amount'],ie_paid:['مبلغ مدفوع غير صحيح','invalid paid amount'],ie_pdate:['تاريخ الدفع غير صحيح أو مستقبلي','invalid or future payment date'],ie_acct:['الحساب غير موجود','account not found'],ie_paidgt:['المدفوع أكبر من القسط','paid exceeds the installment'],ie_noent:['الجهة غير موجودة (فعّل إنشاء الجهات أو أضفها)','Entity not found (enable creating entities or add it)'],iw_cat:['التصنيف غير معروف، سيُستخدم «أخرى»','Unknown category, "other" will be used'],ie_cols:['أعمدة ناقصة','Missing columns'],ie_empty:['الملف فارغ أو بلا صفوف','The file is empty'],mrep:['التقرير الشهري','Monthly report'],month:['الشهر','Month'],sched:['المجدول','Scheduled'],exp_m:['تصدير الشهري','Export monthly'],exp_t:['تصدير الحركات','Export movements'],exp_l:['تصدير السجل','Export log'],nostore:['تنبيه: التخزين غير متاح في هذه البيئة، لن تُحفظ البيانات بعد إغلاق الصفحة. استخدم «نسخة احتياطية» من الإعدادات باستمرار.','Warning: storage is unavailable here, so data will NOT survive closing the page. Use Backup in Settings often.'],reset:['مسح كل البيانات','Erase all data'],cfm:['اضغط مرة أخرى للتأكيد','Click again to confirm'],cnt:['العدد','Count'],theme:['الوضع الداكن/الفاتح','Dark / light']};
+let L='ar',TH='';const t=k=>D[k]?D[k][L=='ar'?0:1]:k;
+const CATS=['housing','car','finance','card','personal','edu','services','invest','sub','other'];
+let db={ents:[],cats:CATS.map(k=>({id:k,k})),accs:[],coms:[],ins:[],pays:[],al:[]};
+try{L=localStorage.getItem('cm_l')||'ar';TH=localStorage.getItem('cm_t')||''}catch(e){}
+// ---- LOCAL accounts: email + password; everything is encrypted (AES-256-GCM) and kept on THIS device. Nothing is sent anywhere. ----
+const ITER=600000;let LOCK_MS=15*60*1000,lastAct=Date.now();
+const AUTH={acc:null,dk:null,err:'',note:''},AU={mode:'login',msg:'',busy:false,rc:null,fails:0,wait:0,last:'',code:''};
+let OKM='',DEL=0;
+const te=new TextEncoder(),td=new TextDecoder(),rnd=n=>crypto.getRandomValues(new Uint8Array(n));
+const b64=u=>{let s='';const a=new Uint8Array(u);for(let i=0;i<a.length;i+=0x8000)s+=String.fromCharCode.apply(null,a.subarray(i,i+0x8000));return btoa(s)},ub64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const normEmail=s=>String(s||'').normalize('NFKC').trim().toLowerCase();
+const okEmail=s=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s)&&s.length<=120;
+const hasCrypto=()=>!!(window.crypto&&crypto.subtle&&window.isSecureContext!==false);
+const B32='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',newRecovery=()=>Array.from(rnd(24),x=>B32[x&31]).join('').match(/.{4}/g).join('-'),normRec=s=>String(s||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+async function kek(secret,salt){const k=await crypto.subtle.importKey('raw',te.encode(String(secret).normalize('NFKC')),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',hash:'SHA-256',salt,iterations:ITER},k,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+const seal=async(key,bytes)=>{const iv=rnd(12);return{iv:b64(iv),ct:b64(await crypto.subtle.encrypt({name:'AES-GCM',iv},key,bytes))}};
+const unseal=async(key,o)=>new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv:ub64(o.iv)},key,ub64(o.ct)));
+const dkFrom=raw=>crypto.subtle.importKey('raw',raw,'AES-GCM',false,['encrypt','decrypt']);
+const getAccs=()=>{try{return JSON.parse(localStorage.getItem('cm_accounts')||'[]')}catch(e){return[]}};
+const putAccs=a=>localStorage.setItem('cm_accounts',JSON.stringify(a));
+const findAcc=e=>getAccs().find(a=>a.email==normEmail(e)),saveAcc=acc=>putAccs(getAccs().map(a=>a.id==acc.id?acc:a));
+const freshDb=()=>normDb({ents:[],cats:CATS.map(k=>({id:k,k})),accs:[],coms:[],ins:[],pays:[],al:[]});
+// persistence (serialized, previous copy kept for corruption recovery)
+let pTimer=0,PQ=Promise.resolve();
+const persistSoon=()=>{if(!AUTH.dk)return;clearTimeout(pTimer);pTimer=setTimeout(persistNow,200)};
+const persistNow=()=>{clearTimeout(pTimer);if(!AUTH.dk)return PQ;const acc=AUTH.acc,key=AUTH.dk,body=te.encode(JSON.stringify(db));
+ PQ=PQ.then(async()=>{try{const o=await seal(key,body),k='cm_d_'+acc.id,old=localStorage.getItem(k);if(old)localStorage.setItem('cm_p_'+acc.id,old);localStorage.setItem(k,JSON.stringify({v:1,...o}));AUTH.err=''}catch(e){AUTH.err='save';updBanner()}});return PQ};
+document.addEventListener('visibilitychange',()=>{if(document.hidden)persistNow()});window.addEventListener('pagehide',()=>persistNow());
+async function loadData(){
+ const id0=AUTH.acc.id,k='cm_d_'+id0;let d=null;AUTH.note='';
+ for(const key of [k,'cm_p_'+id0]){const s=localStorage.getItem(key);if(!s)continue;try{d=JSON.parse(td.decode(await unseal(AUTH.dk,JSON.parse(s))));if(key!=k)AUTH.note='prevd';break}catch(e){}}
+ if(!d){const s=localStorage.getItem(k);if(s){try{localStorage.setItem('cm_bad_'+id0+'_'+Date.now(),s)}catch(e){}AUTH.note='lost'}d=freshDb()}
+ db=normDb(d);if(!db.seeded)seedEnts();}
+function startSession(){AU.rc=null;AU.msg='';AU.busy=false;AU.mode='login';AU.fails=0;AU.last='';AU.code='';lastAct=Date.now();genAll();try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}go('dash')}
+const au=(k,b)=>{AU.last=normEmail(val('lg_e'))||AU.last;AU.code=val('lg_c')||AU.code;AU.msg=k?t(k):'';AU.busy=!!b;draw()};
+const throttled=()=>{if(AU.wait>Date.now()){au('e_wait');return true}return false};
+const failed=()=>{AU.fails++;if(AU.fails>=3)AU.wait=Date.now()+Math.min(60,2**(AU.fails-2))*1000};
+async function makeKeys(pw){const dkRaw=rnd(32),saltP=rnd(16),saltR=rnd(16),code=newRecovery(),[kp,kr]=await Promise.all([kek(pw,saltP),kek(normRec(code),saltR)]);
+ return{dkRaw,code,saltP:b64(saltP),wrapP:await seal(kp,dkRaw),saltR:b64(saltR),wrapR:await seal(kr,dkRaw)}}
+async function doRegister(){
+ if(AU.busy)return;const e=normEmail(val('lg_e')),p=val('lg_p'),p2=val('lg_p2');
+ if(!okEmail(e))return au('e_email');if(p.length<8)return au('e_pwshort');if(p!==p2)return au('e_pwmatch');if(findAcc(e))return au('e_exists');
+ au('',true);
+ try{const k=await makeKeys(p),acc={id:id(),email:e,created:Date.now(),saltP:k.saltP,wrapP:k.wrapP,saltR:k.saltR,wrapR:k.wrapR,lastBackup:0};
+  AUTH.acc=acc;AUTH.note='';AUTH.err='';AUTH.dk=await dkFrom(k.dkRaw);db=freshDb();seedEnts();putAccs([...getAccs(),acc]);await persistNow();AU.rc=k.code;AU.msg='';AU.busy=false;draw()}
+ catch(x){AUTH.dk=null;AUTH.acc=null;au('e_nocrypto')}}
+async function doLogin(){
+ if(AU.busy||throttled())return;const e=normEmail(val('lg_e')),p=val('lg_p');if(!e||!p)return au('e_req');
+ const acc=findAcc(e);au('',true);let ok=false;
+ if(acc){try{const raw=await unseal(await kek(p,ub64(acc.saltP)),acc.wrapP);AUTH.dk=await dkFrom(raw);AUTH.acc=acc;ok=true}catch(x){}}else{try{await kek(p,rnd(16))}catch(x){}}
+ if(!ok){failed();return au('e_login')}
+ await loadData();startSession()}
+async function doRecover(){
+ if(AU.busy||throttled())return;const e=normEmail(val('lg_e')),c=val('lg_c'),p=val('lg_p'),p2=val('lg_p2'),acc=findAcc(e);
+ if(p.length<8)return au('e_pwshort');if(p!==p2)return au('e_pwmatch');au('',true);let raw=null;
+ if(acc){try{raw=await unseal(await kek(normRec(c),ub64(acc.saltR)),acc.wrapR)}catch(x){}}else{try{await kek(c,rnd(16))}catch(x){}}
+ if(!raw){failed();return au('e_rec')}
+ const saltP=rnd(16),saltR=rnd(16),code=newRecovery();
+ acc.saltP=b64(saltP);acc.wrapP=await seal(await kek(p,saltP),raw);acc.saltR=b64(saltR);acc.wrapR=await seal(await kek(normRec(code),saltR),raw);saveAcc(acc);
+ AUTH.acc=acc;AUTH.dk=await dkFrom(raw);await loadData();AU.rc=code;AU.busy=false;AU.msg='';draw()}
+async function doImport(){
+ if(AU.busy)return;const f=($('#lg_f')||{}).files&&$('#lg_f').files[0],p=val('lg_p');if(!f||!p)return au('e_req');au('',true);
+ try{const x=JSON.parse(await f.text());if(x.format!='cm-backup'||!x.acc||!x.data)throw 0;const acc={...x.acc,lastBackup:Date.now()};
+  if(findAcc(acc.email)||getAccs().some(a=>a.id==acc.id))return au('e_exists');
+  const raw=await unseal(await kek(p,ub64(acc.saltP)),acc.wrapP),dk=await dkFrom(raw);JSON.parse(td.decode(await unseal(dk,x.data)));
+  putAccs([...getAccs(),acc]);localStorage.setItem('cm_d_'+acc.id,JSON.stringify(x.data));AUTH.acc=acc;AUTH.dk=dk;await loadData();startSession()}
+ catch(x){failed();au('e_bk')}}
+async function lockNow(){await persistNow();AUTH.dk=null;AUTH.acc=null;AUTH.note='';AUTH.err='';AU.rc=null;AU.busy=false;AU.msg='';AU.mode='login';db=freshDb();OKM='';msg='';R='dash';DEL=0;draw()}
+['click','keydown','touchstart','mousemove'].forEach(ev=>document.addEventListener(ev,()=>{lastAct=Date.now()},{passive:true}));
+setInterval(()=>{if(AUTH.dk&&!AU.rc&&LOCK_MS>0&&Date.now()-lastAct>LOCK_MS)lockNow()},3000);
+// ---- account actions (settings) ----
+async function pwRaw(p){return unseal(await kek(p,ub64(AUTH.acc.saltP)),AUTH.acc.wrapP)}
+async function changePw(){const o=val('cp_o'),n=val('cp_n'),n2=val('cp_n2');if(n.length<8)return err(t('e_pwshort'));if(n!==n2)return err(t('e_pwmatch'));
+ let raw;try{raw=await pwRaw(o)}catch(e){return err(t('e_wrongpw'))}
+ const s=rnd(16);AUTH.acc.saltP=b64(s);AUTH.acc.wrapP=await seal(await kek(n,s),raw);saveAcc(AUTH.acc);msg='';OKM=t('ac_ok_pw');draw()}
+async function newRc(){let raw;try{raw=await pwRaw(val('rc_p'))}catch(e){return err(t('e_wrongpw'))}
+ const s=rnd(16),code=newRecovery();AUTH.acc.saltR=b64(s);AUTH.acc.wrapR=await seal(await kek(normRec(code),s),raw);saveAcc(AUTH.acc);AU.rc=code;draw()}
+async function bkEnc(){await persistNow();const a=AUTH.acc,{id:i,email,created,saltP,wrapP,saltR,wrapR}=a;
+ dl(JSON.stringify({format:'cm-backup',v:1,acc:{id:i,email,created,saltP,wrapP,saltR,wrapR},data:JSON.parse(localStorage.getItem('cm_d_'+i))}),'commitments-'+today+'.cmbk','application/json');markBk()}
+function markBk(){AUTH.acc.lastBackup=Date.now();saveAcc(AUTH.acc);updBanner()}
+async function delAcc(){if(DEL&&Date.now()-DEL<30000){const i=AUTH.acc.id;await persistNow();AUTH.dk=null;putAccs(getAccs().filter(a=>a.id!=i));Object.keys(localStorage).filter(k=>k.includes(i)).forEach(k=>localStorage.removeItem(k));return lockNow()}
+ try{await pwRaw(val('dl_p'))}catch(e){return err(t('e_wrongpw'))}DEL=Date.now();draw()}
+// ---- UI ----
+const needBk=()=>AUTH.acc&&(db.coms.length||db.pays.length||db.accs.length)&&Date.now()-(AUTH.acc.lastBackup||0)>7*864e5;
+const bannerHTML=()=>(NS?`<div class="err">${t('nostore')}</div>`:'')+(AUTH.err=='save'?`<div class="err">${t('nostore')}</div>`:'')+(AUTH.note=='prevd'?`<div class="warn">${t('w_prevd')}</div>`:'')+(AUTH.note=='lost'?`<div class="err">${t('w_lost')}</div>`:'')+(needBk()?`<div class="warn">${t('w_bk')}</div>`:'');
+const updBanner=()=>{const e=document.getElementById('banner');if(e)e.innerHTML=bannerHTML()};
+const safeDraw=()=>{const a=document.activeElement;if(a&&/^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName)&&a.closest('main'))a.addEventListener('blur',()=>draw(),{once:true});else draw()};
+const pwf=(i,ac,l)=>`<label>${l}<span class="pw"><input data-keep id="${i}" type="password" autocomplete="${ac}" autocapitalize="none" autocorrect="off" spellcheck="false"><button type="button" class="btn s o" onclick="const x=$('#${i}');x.type=x.type=='password'?'text':'password'">${t('lg_show')}</button></span></label>`;
+const emf=()=>`<label>${t('lg_email')}<input data-keep id="lg_e" type="email" autocomplete="username" inputmode="email" autocapitalize="none" autocorrect="off" spellcheck="false" value="${esc(AU.last)}"></label>`;
+const recScreen=()=>`<div class="card auth"><h2>${t('rc_title')}</h2><p>${t('rc_text')}</p><div class="rc" id="rcv">${esc(AU.rc)}</div><p><button class="btn o" onclick="navigator.clipboard&&navigator.clipboard.writeText($('#rcv').textContent)">${t('rc_copy')}</button></p><p><button class="btn g" onclick="AU.rc=null;if(AU.fromSettings){AU.fromSettings=false;draw()}else startSession()">${t('rc_ok')}</button></p></div>`;
+function authHTML(){
+ if(AU.rc)return recScreen();
+ const m=AU.mode,bad=!hasCrypto()||NS,sub={login:'lg_sub_login',reg:'lg_sub_reg',forgot:'lg_recover',imp:'lg_import'}[m];
+ const body={login:`<form novalidate onsubmit="event.preventDefault();doLogin()">${emf()}${pwf('lg_p','current-password',t('lg_pw'))}<button class="btn g" type="submit" ${AU.busy?'disabled':''}>${AU.busy?t('lg_busy'):t('lg_btn')}</button></form><p><a href="#" onclick="AU.mode='forgot';AU.msg='';draw();return false">${t('lg_forgot')}</a></p>`,
+ reg:`<form novalidate onsubmit="event.preventDefault();doRegister()">${emf()}${pwf('lg_p','new-password',t('lg_pw'))}${pwf('lg_p2','new-password',t('lg_pw2'))}<button class="btn g" type="submit" ${AU.busy?'disabled':''}>${AU.busy?t('lg_busy'):t('lg_reg')}</button></form>`,
+ forgot:`<form novalidate onsubmit="event.preventDefault();doRecover()">${emf()}<label>${t('lg_rcode')}<input data-keep id="lg_c" autocomplete="off" autocapitalize="characters" spellcheck="false" style="direction:ltr" value="${esc(AU.code)}"></label>${pwf('lg_p','new-password',t('lg_newpw'))}${pwf('lg_p2','new-password',t('lg_pw2'))}<button class="btn g" type="submit" ${AU.busy?'disabled':''}>${AU.busy?t('lg_busy'):t('lg_recover')}</button></form>`,
+ imp:`<form novalidate onsubmit="event.preventDefault();doImport()"><label>${t('lg_file')}<input data-keep id="lg_f" type="file" accept=".cmbk,.json"></label>${pwf('lg_p','current-password',t('lg_pw'))}<button class="btn g" type="submit" ${AU.busy?'disabled':''}>${AU.busy?t('lg_busy'):t('lg_import')}</button></form>`}[m];
+ const nav2=`<p class="k">${m!='login'?`<a href="#" onclick="AU.mode='login';AU.msg='';draw();return false">${t('lg_to_login')}</a> · `:''}${m!='reg'?`<a href="#" onclick="AU.mode='reg';AU.msg='';draw();return false">${t('lg_to_reg')}</a> · `:''}${m!='imp'?`<a href="#" onclick="AU.mode='imp';AU.msg='';draw();return false">${t('lg_import')}</a> · `:''}<a href="#" onclick="L=L=='ar'?'en':'ar';try{localStorage.setItem('cm_l',L)}catch(e){}draw();return false">${t('lang')}</a></p>`;
+ const ios=/iP(hone|ad|od)/.test(navigator.userAgent)&&!navigator.standalone?`<p class="k">${t('w_ios')}</p>`:'';
+ return`<div class="card auth"><h1>💳 ${t('app')}</h1><p class="k">${t(sub)}</p>${!hasCrypto()?`<div class="err">${t('e_nocrypto')}</div>`:''}${NS?`<div class="err">${t('nostore')}</div>`:''}${AU.msg?`<div class="err">${esc(AU.msg)}</div>`:''}${bad?'':body}${nav2}<p class="k">${t('ac_local')}</p>${ios}<p class="k" dir="ltr" style="font-size:11px;opacity:.65">${diag()}</p></div>`}
+const diag=()=>`${location.protocol.replace(':','')} · secure:${window.isSecureContext} · crypto:${!!(window.crypto&&crypto.subtle)} · storage:${!NS}`;
+window.addEventListener('unhandledrejection',()=>{AU.busy=false});
+const boot=()=>{if(!getAccs().length)AU.mode='reg';draw()};
+let NS=false;try{localStorage.setItem('cm_t0','1');localStorage.removeItem('cm_t0')}catch(e){NS=true}
+const save=()=>persistSoon();
+const id=()=>crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=crypto.getRandomValues(new Uint8Array(1))[0]&15;return(c=='x'?r:(r&3|8)).toString(16)}),$=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let today=new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Riyadh'});
+const addD=(s,n)=>{const[y,m,d]=s.split('-').map(Number);return new Date(Date.UTC(y,m-1,d+n)).toISOString().slice(0,10)};
+const fmt=n=>(n/100).toLocaleString(L=='ar'?'ar-SA-u-nu-latn':'en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const parse=s=>{const x=String(s).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[\s\u200e\u200f]/g,'').replace(/[,٬]/g,'').replace('٫','.');if(!/^-?\d+(\.\d{1,2})?$/.test(x)||Math.abs(+x)>1e10)return NaN;const[i,f='']=x.replace('-','').split('.'),m=Number(i+f.padEnd(2,'0'));return x[0]=='-'&&m?-m:m};
+const nz=s=>String(s||'').toLowerCase().replace(/[\u064B-\u065F]/g,'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').trim();
+const addM=(s,n)=>{let[y,m,d]=s.split('-').map(Number),q=m-1+n;y+=Math.floor(q/12);q=((q%12)+12)%12;const ld=new Date(Date.UTC(y,q+1,0)).getUTCDate();return`${y}-${String(q+1).padStart(2,'0')}-${String(Math.min(d,ld)).padStart(2,'0')}`};
+const nm=(o,pre)=>o.n||t(pre+o.k);
+// ---- seed entities (picked from a dropdown; type follows the entity) ----
+const SEED={
+bank:'البنك الأهلي السعودي|مصرف الراجحي|بنك الرياض|البنك السعودي الأول|البنك العربي الوطني|مصرف الإنماء|بنك السعودي الفرنسي|البنك السعودي للاستثمار|بنك الجزيرة|بنك البلاد|بنك الخليج الدولي – السعودية|بنك إس تي سي|بنك فيجن|بنك D360|بنك EZ',
+fbank:'بنك الإمارات دبي الوطني|بنك البحرين الوطني|بنك الكويت الوطني|بنك مسقط|دويتشه بنك|بي إن بي باريبا|جي بي مورغان تشيس|البنك الوطني الباكستاني|بنك زراعات التركي|البنك الصناعي والتجاري الصيني|بنك قطر الوطني|بنك إم يو إف جي|بنك أبوظبي الأول|يو بي إس|ستاندرد تشارترد|البنك الوطني العراقي|مصرف التجارة العراقي|بنك الصين المحدود|بنك مصر|البنك الأهلي المصري|بنك صحار الدولي|بنك الأردن|بنك أبوظبي التجاري|بنك الشريعة الإسلامي الإندونيسي',
+fin:'شركة أملاك العالمية|شركة دار التمليك|الشركة السعودية لتمويل المساكن|مسار النمو للتمويل|عبد اللطيف جميل المتحدة لتمويل العقار|بداية للتمويل|الشركة السعودية لإعادة التمويل العقاري|شركة النايفات للتمويل|شركة ينال للتمويل|شركة اليسر للإجارة والتمويل|شركة عجيل للخدمات المالية|شركة وطنية للتمويل|شركة مرابحة مارينا للتمويل|شركة سحاب للتمويل|الشركة السعودية للتمويل|شركة عبد اللطيف جميل للتمويل|شركة الخليج للتمويل|شركة تمويلي الدولية|شركة الأمثل للتمويل|شركة أصول الحديثة للتمويل|شركة دار الائتمان السعودي|شركة توكيلات للتمويل|شركة إجارة للتمويل|شركة تيسير للتمويل|شركة السعودي الفرنسي للتأجير التمويلي|شركة تمويل الأولى|شركة الجبر للتمويل|شركة الرائدة للتمويل|شركة راية للتمويل|شركة كوارا للتمويل|التاجر التمويلي|شركة الخليج للتأجير المالي|إمكان للتمويل|تمام للتمويل|التمويل الوطني للمساكن|ليندو السعودية للتمويل|فينزي للتمويل|سلفة للتمويل|فورس|شركة وقود للتمويل|الحلول المتكاملة الحديثة للتمويل|مدفوع العربية|تمارا للتمويل|الثمار|شركة لوَن للتمويل|دنانير للتمويل|جيل الدفع الآجل|ألفا العربية للتمويل|هلا للتمويل|بوابة تسهيل|سيولة الأولى|تال للتمويل|اعتماد|نماء المتحدة للتمويل|نائلة للتمويل|مهلة زمانية|تابي للتمويل|الحلول المنطلقة|عائج للتمويل|تك مال للتمويل|دفعة للتمويل|مدارك للحلول التمويلية|جاك المقدمة للتمويل|تقنيات دفتر|كريدت لاين|منصة همة للتمويل|Credit Line Company|Mansat Hima for Financing Company',
+svc:'أمريكان إكسبريس|الشركة المتحدة للخدمات المالية',
+crowd:'شركة مد بالاس للتمويل الجماعي بالدين|منافع للتمويل الجماعي بالدين|تميد للتمويل الجماعي|رقمية|ثراء للتمويل الجماعي|Funding Souq – سوق التمويل',
+micro:'عون الرائدة للتمويل الأصغر|الآن الخليجية للتمويل الأصغر الاستهلاكي',
+inst:'مكتب تقسيط',com:'شركة تجارية',gov:'جهة حكومية',emp:'جهة العمل',govfin:'البنك الزراعي|بنك التنمية الاجتماعية',govre:'البنك العقاري',ind:'فرد',oth:'أخرى',bill:'STC|موبايلي|زين'};
+const ET=['bank','fbank','fin','svc','crowd','micro','inst','com','co','gov','govfin','govre','emp','ind','bill','oth'];
+const seedEnts=()=>{const have=new Set(db.ents.map(e=>nz(e.n)));for(const[k,v]of Object.entries(SEED))for(const n of v.split('|'))if(!have.has(nz(n))){db.ents.push({id:id(),n,k});have.add(nz(n))}db.seeded=1;save()};if(!db.seeded)seedEnts();
+const tyOf=i=>{const e=db.ents.find(x=>x.id==i);return e?t('et_'+e.k):''};
+const entOpts=()=>ET.map(k=>{const l=db.ents.filter(e=>e.k==k);return l.length?`<optgroup label="${esc(t('et_'+k))}">${l.map(e=>`<option value="${e.id}">${esc(e.n)}</option>`).join('')}</optgroup>`:''}).join('');
+// ---- derived values (never stored) ----
+const isD=s=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(s))return false;const d=new Date(s+'T00:00:00Z');return !isNaN(d)&&d.toISOString().slice(0,10)==s&&s>='2000-01-01'&&s<='2100-12-31'};
+const pv=pid=>db.pays.find(p=>p.id==pid)?.v;
+const paid=i=>db.al.filter(a=>a.i==i.id&&!pv(a.p)).reduce((s,a)=>s+a.a,0);
+const setV=sid=>{const s=db.set.find(x=>x.id==sid);return !s||s.v};                          // voided (or missing) settlement
+const wvOf=i=>db.wv.filter(w=>w.i==i.id&&!setV(w.s)).reduce((s,w)=>s+w.a,0);               // waived by an active settlement
+const covOf=i=>paid(i)+wvOf(i),remOf=i=>i.a-covOf(i);
+const comOf=i=>db.coms.find(c=>c.id==i.c);
+const susp=c=>!!c&&db.sus.some(x=>x.c==c.id&&!x.v&&x.s<=today&&(!x.r||today<x.r));
+const cancelledI=i=>!!i.x||!!(comOf(i)||{}).cx;
+const st=i=>cancelledI(i)?'cancelled':remOf(i)<=0?'paid':susp(comOf(i))?'suspended':i.d<today?'overdue':i.d==today?'due':'upcoming';
+const insOf=c=>db.ins.filter(i=>i.c==c.id).sort((a,b)=>a.d<b.d?-1:a.d>b.d?1:0),liveIns=c=>insOf(c).filter(i=>!i.x);
+const sum=c=>{const all=insOf(c),l=c.cx?[]:all.filter(i=>!i.x),tot=l.reduce((s,i)=>s+i.a,0),p=l.reduce((s,i)=>s+paid(i),0),w=l.reduce((s,i)=>s+wvOf(i),0),rem=tot-p-w,od=l.filter(i=>st(i)=='overdue');
+ const done=rem<=0&&l.length>0&&(c.rr?!!c.re&&c.re<=today:true);
+ return{l,all,tot,p,w,rem,od:od.length,odAmt:od.reduce((s,i)=>s+remOf(i),0),paidAll:all.reduce((s,i)=>s+paid(i),0),
+  status:c.cx?'cancelled':done?'completed':susp(c)?'suspended':(p+w==0&&l.length&&l[0].d>today?'scheduled':'active'),
+  end:c.rr?(c.re||''):(l.length?l[l.length-1].d:''),start:l.length?l[0].d:''}};
+const pt=p=>db.al.filter(a=>a.p==p.id).reduce((s,a)=>s+a.a,0);
+const bal=a=>a.o+db.mv.filter(m=>m.a==a.id&&!m.v).reduce((s,m)=>s+m.dir*m.m,0)+db.trf.filter(x=>x.t==a.id&&!x.v).reduce((s,x)=>s+x.m,0)-db.trf.filter(x=>x.f==a.id&&!x.v).reduce((s,x)=>s+x.m,0)-db.pays.filter(p=>p.a==a.id&&!p.v).reduce((s,p)=>s+pt(p),0);
+const chip=s=>`<span class="chip ${s}">${t((['paid','overdue','due','upcoming','cancelled','suspended'].includes(s)?'s_':'c_')+s)}</span>`;
+const logE=(act,ent,eid,root,det)=>{db.log.push({id:id(),ts:Date.now(),act,ent,eid,root:root||'',det:det||''});if(db.log.length>3000)db.log.splice(0,db.log.length-3000)};
+function normDb(d){['ents','cats','accs','coms','ins','pays','al','sus','set','wv','mv','trf','log','imp'].forEach(k=>{if(!Array.isArray(d[k]))d[k]=[]});return d}
+let ACT=null;
+// ---- UI ----
+let pend='';const two=(k,f)=>{if(pend==k){pend='';f()}else{pend=k;draw();setTimeout(()=>{if(pend==k){pend='';draw()}},4000)}};
+
+const NAV=['dash','coms','pay','pays','accs','ents','cats','reps','imp','log','sets'];
+let R=location.hash.slice(1)||'dash',Q='',F='',msg='';
+const go=r=>{R=r;msg='';OKM='';ACT=null;location.hash=r;draw()};
+window.onhashchange=()=>{const n=location.hash.slice(1)||'dash';if(n!=R){R=n;msg='';draw()}};
+const err=m=>{const sn=[...document.querySelectorAll('#app input[id],#app select[id]')].filter(e=>e.type!='file'&&e.type!='password').map(e=>[e.id,e.value]),al=[...document.querySelectorAll('#app .al')].map(e=>[e.dataset.i,e.value]);msg=m;draw();sn.forEach(([i,v])=>{const e=document.getElementById(i);if(e&&e.type!='file')e.value=v});al.forEach(([i,v])=>{const e=document.querySelector('.al[data-i="'+i+'"]');if(e)e.value=v})};
+const val=i=>($('#'+i)||{}).value||'';
+const opt=(arr,sel,f)=>arr.map(o=>`<option value="${esc(o.id||o)}" ${(o.id||o)==sel?'selected':''}>${esc(f(o))}</option>`).join('');
+const tbl=(h,rows)=>`<div class="w card"><table><tr>${h.map(x=>`<th>${t(x)}</th>`).join('')}</tr>${rows||`<tr><td colspan="${h.length}" class="k">${t('none')}</td></tr>`}</table></div>`;
+const harden=()=>document.querySelectorAll('#app input:not([data-keep]),#app select').forEach((e,i)=>{e.setAttribute('autocomplete','off');e.setAttribute('autocorrect','off');e.setAttribute('autocapitalize','off');e.setAttribute('spellcheck','false');e.setAttribute('name','cm_'+(e.id||i)+'_x');e.setAttribute('data-lpignore','true');e.setAttribute('data-form-type','other')});
+function draw(){
+ document.documentElement.lang=L;document.documentElement.dir=L=='ar'?'rtl':'ltr';
+ if(TH)document.documentElement.dataset.theme=TH;else delete document.documentElement.dataset.theme;
+ if(!AUTH.dk||AU.rc){document.body.classList.add('locked');$('#nav').innerHTML='';$('#app').innerHTML=authHTML();return}
+ document.body.classList.remove('locked');
+ $('#nav').innerHTML=`<h1>${t('app')}</h1>`+NAV.map(n=>`<a class="${R.split(':')[0]==n||(n=='coms'&&R=='new')?'on':''}" onclick="go('${n}')">${t(n=='pay'?'pay':n)}</a>`).join('')+`<div class="k" style="padding:6px 12px;color:#cfd2ff;font-size:12px;word-break:break-all">${esc(AUTH.acc.email)}</div><button class="btn s o" style="margin:0 12px" onclick="lockNow()">🔒 ${t('lock')}</button>`;
+ const [v,a]=R.split(':');const V={dash,coms,com:()=>com(a),new:nw,pay:()=>pay(a),pays,accs,acc:()=>acc(a),ents,cats,reps,log:logPage,sets,rec:nrec,imp:impPage}[v]||dash;
+ $('#app').innerHTML=`<div id="banner">${bannerHTML()}</div>`+(msg?`<div class="err">${esc(msg)}</div>`:'')+(OKM?`<div class="ok">${esc(OKM)}</div>`:'')+V();harden()
+}
+function dash(){
+ const all=db.coms.map(sum),T=all.reduce((s,x)=>s+x.tot,0),P=all.reduce((s,x)=>s+x.p,0),W=all.reduce((s,x)=>s+x.w,0),O=all.reduce((s,x)=>s+x.odAmt,0),on=all.reduce((s,x)=>s+x.od,0);
+ const up=db.ins.filter(i=>!cancelledI(i)&&remOf(i)>0&&!susp(comOf(i))&&i.d<=addD(today,14)).sort((a,b)=>a.d<b.d?-1:1).slice(0,8);
+ const card=(k,v,c='')=>`<div class="card"><div class="k">${t(k)}</div><div class="v ${c}">${v}</div></div>`;
+ return`<div class="top"><h2>${t('dash')}</h2><button class="btn g" onclick="go('pay')">${t('pay')}</button></div>
+ <div class="grid">${card('tot',fmt(T))}${card('paid',fmt(P),'paid')}${W?card('waived',fmt(W)):''}${card('rem',fmt(T-P-W))}${card('od',on+' · '+fmt(O),on?'overdue':'')}${card('accs',fmt(db.accs.reduce((s,a)=>s+bal(a),0)))}${recCard()}</div>
+ <h3>${t('upc')}</h3>${tbl(['name','due','rem','status',''],up.map(i=>{const c=comOf(i);return`<tr><td>${esc(c?.n)}</td><td>${i.d}</td><td>${fmt(remOf(i))}</td><td>${chip(st(i))}</td><td><button class="btn s" onclick="go('pay:${i.id}')">${t('pnow')}</button></td></tr>`}).join(''))}`}
+
+const LA={create_commitment:['إنشاء التزام','Commitment created'],pay:['تسجيل دفعة','Payment recorded'],void_payment:['إبطال دفعة','Payment voided'],defer:['تأجيل قسط','Installment deferred'],reschedule:['تعديل تاريخ قسط','Installment rescheduled'],amount_edit:['تعديل مبلغ قسط','Installment amount changed'],cancel_installment:['إلغاء قسط','Installment cancelled'],restore_installment:['استعادة قسط','Installment restored'],cancel_commitment:['إلغاء التزام','Commitment cancelled'],restore_commitment:['استعادة التزام','Commitment restored'],suspend:['تعليق التزام','Commitment suspended'],resume:['استئناف التزام','Commitment resumed'],shift:['إزاحة أقساط','Installments shifted'],delete_commitment:['حذف التزام','Commitment deleted'],deposit:['إيداع','Deposit'],withdrawal:['سحب','Withdrawal'],adjust:['تصحيح رصيد','Balance adjustment'],transfer:['تحويل بين حسابين','Transfer'],void_movement:['إبطال حركة','Movement voided'],void_transfer:['إبطال تحويل','Transfer voided'],create_account:['إنشاء حساب','Account created'],settle:['تسوية مبكرة','Early settlement'],void_settlement:['إبطال تسوية','Settlement voided'],rule_change:['تغيير مبلغ دوري','Recurring amount changed'],end_recurrence:['إنهاء التزام متكرر','Recurrence ended'],import:['استيراد','Import'],undo_import:['تراجع عن استيراد','Import undone']};
+const la=a=>(LA[a]||[a,a])[L=='ar'?0:1];
+const logRows=l=>l.slice().reverse().map(e=>`<tr><td>${new Date(e.ts).toLocaleString(L=='ar'?'ar-SA-u-nu-latn':'en-GB')}</td><td>${esc(la(e.act))}</td><td style="white-space:normal">${esc(e.det)}</td></tr>`).join('');
+// ---- recurring (open-ended) commitments: rent, subscriptions, services ----
+const perOf=(c,k)=>c.ru=='week'?addD(c.an,7*c.rn*k):addM(c.an,(c.ru=='year'?12:1)*c.rn*k);
+const ruleAt=(c,p)=>{let r=c.rr[0];c.rr.forEach(x=>{if(x.ef<=p)r=x});return r};
+function genRec(c){if(!c.rr||c.cx)return 0;let k0=0;while(k0<1200&&perOf(c,k0)<today)k0++;let made=0;
+ for(let k=0;k<=k0+11&&k<1200;k++){const p=perOf(c,k);if(c.re&&p>c.re)break;if(c.gf&&p<c.gf)continue;if(db.ins.some(i=>i.c==c.id&&i.gp==p))continue;const r=ruleAt(c,p);db.ins.push({id:id(),c:c.id,a:r.a,d:p,o:p,gp:p,rid:r.id});made++}return made}
+const genAll=()=>{let n=0;db.coms.forEach(c=>{n+=genRec(c)});if(n)save();return n};
+const monthly=c=>{const a=c.rr[c.rr.length-1].a;return Math.round(c.ru=='week'?a*52/12/c.rn:c.ru=='year'?a/(12*c.rn):a/c.rn)};
+const recCard=()=>{const l=db.coms.filter(c=>c.rr&&!c.cx&&!susp(c)&&!(c.re&&c.re<today));return l.length?`<div class="card"><div class="k">${t('rec_burden')}</div><div class="v">${fmt(l.reduce((s,c)=>s+monthly(c),0))}</div></div>`:''};
+const recBtn=c=>c.rr&&!c.cx?actBtn('rule','a_rule')+' '+actBtn('endrec','a_endrec'):'';
+const recInfo=c=>{if(!c.rr)return'';const r=c.rr[c.rr.length-1],u={week:'u_week',month:c.rn==3?'u_quarter':'u_month',year:'u_year'}[c.ru];return`<p class="k">🔁 ${t(u)}${c.rn>1&&c.ru!='month'||c.rn>1&&c.rn!=3?' ×'+c.rn:''} · ${fmt(r.a)}${c.re?' · '+t('rec_end')+': '+c.re:''}</p>`};
+function nrec(){return`<div class="top"><h2>${t('rec_new')}</h2></div><div class="card"><div class="f">
+ <label>${t('f_com')}*<input id="n"></label><label>${t('ent')}*<select id="e" onchange="$('#ety').value=tyOf(this.value)"><option value="">${t('pick')}</option>${entOpts()}</select></label><label>${t('etype')}<input id="ety" readonly placeholder="—"></label>
+ <label>${t('cat')}<select id="k">${opt(db.cats,'housing',c=>nm(c,'c_'))}</select></label><label>${t('rec_amt')}*<input id="ra" inputmode="decimal"></label>
+ <label>${t('rec_every')}<select id="ru"><option value="month">${t('u_month')}</option><option value="quarter">${t('u_quarter')}</option><option value="year">${t('u_year')}</option><option value="week">${t('u_week')}</option></select></label>
+ <label>${t('first')}*<input id="f" type="date"></label><label>${t('rec_end')}<input id="re" type="date"></label>
+ <label style="display:flex;gap:8px;align-items:center"><input id="gf" type="checkbox" style="width:auto"> ${t('rec_from')}</label></div>
+ <button class="btn g" onclick="saveRec()">${t('save')}</button></div>`}
+function saveRec(){
+ const n=val('n').trim(),en=val('e'),a=parse(val('ra')),f=val('f'),re=val('re'),u=val('ru'),e=db.ents.find(x=>x.id==en);
+ if(!n||!e||!f)return err(t('e_req'));if(isNaN(a)||a<=0)return err(t('e_num'));if(!isD(f)||(re&&(!isD(re)||re<f)))return err(t('e_date'));
+ const c={id:id(),n,e:e.id,k:val('k'),ru:u=='quarter'?'month':u,rn:u=='quarter'?3:1,an:f,re:re||'',rr:[{id:id(),ef:f,a}]};if($('#gf').checked)c.gf=today;
+ db.coms.push(c);genRec(c);logE('create_commitment','commitment',c.id,c.id,c.n+' · '+fmt(a)+' 🔁');save();go('com:'+c.id)}
+setInterval(()=>{const n=new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Riyadh'});if(n!=today){today=n;if(AUTH.dk){genAll();safeDraw()}}},60000);
+// ---- monthly report ----
+let REPY='';
+const monthRows=y=>{const o=[];for(let m=1;m<=12;m++){const pre=y+'-'+String(m).padStart(2,'0'),ins=db.ins.filter(i=>!cancelledI(i)&&i.d.startsWith(pre));
+ o.push({m:pre,n:ins.length,sch:ins.reduce((s,i)=>s+i.a,0),cash:db.pays.filter(p=>!p.v&&p.d.startsWith(pre)).reduce((s,p)=>s+pt(p),0),w:db.set.filter(x=>!x.v&&x.d.startsWith(pre)).reduce((s,x)=>s+db.wv.filter(y=>y.s==x.id).reduce((a,y)=>a+y.a,0),0)})}return o};
+const repYears=()=>{const ys=new Set([today.slice(0,4)]);db.ins.forEach(i=>ys.add(i.d.slice(0,4)));db.pays.forEach(p=>ys.add(p.d.slice(0,4)));return[...ys].sort()};
+function monthReport(){const y=REPY||today.slice(0,4),r=monthRows(y),T=k=>r.reduce((s,x)=>s+x[k],0);
+ return`<h3>${t('mrep')}</h3><label style="max-width:160px"><select onchange="REPY=this.value;draw()">${repYears().map(v=>`<option ${v==y?'selected':''}>${v}</option>`).join('')}</select></label>`+tbl(['month','cnt','sched','st_cash','waived'],r.map(x=>`<tr><td>${x.m}</td><td>${x.n}</td><td>${fmt(x.sch)}</td><td>${fmt(x.cash)}</td><td>${fmt(x.w)}</td></tr>`).join('')+`<tr><th>${t('total')}</th><th>${T('n')}</th><th>${fmt(T('sch'))}</th><th>${fmt(T('cash'))}</th><th>${fmt(T('w'))}</th></tr>`)}
+function csv2(k){const q=v=>{v=String(v??'');if(/^[=+\-@]/.test(v))v="'"+v;return'"'+v.replace(/"/g,'""')+'"'};let rows;
+ if(k=='m')rows=[['month','installments','scheduled','cash_paid','waived'],...monthRows(REPY||today.slice(0,4)).map(x=>[x.m,x.n,x.sch/100,x.cash/100,x.w/100])];
+ else if(k=='t')rows=[['date','type','account','amount','note','voided'],...db.mv.map(m=>[m.d,m.k,db.accs.find(a=>a.id==m.a)?.n,m.dir*m.m/100,m.why,m.v]),...db.trf.map(x=>[x.d,'transfer',(db.accs.find(a=>a.id==x.f)?.n||'')+' > '+(db.accs.find(a=>a.id==x.t)?.n||''),x.m/100,x.nt,x.v])];
+ else rows=[['time','action','details'],...db.log.map(e=>[new Date(e.ts).toISOString(),e.act,e.det])];
+ dl('\ufeff'+rows.map(r=>r.map(q).join(',')).join('\n'),'report-'+k+'.csv','text/csv')}
+// ---- CSV import: validate -> preview -> confirm (atomic) -> undo ----
+let IMP=null;
+const lat=s=>String(s).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+const HM={name:['الالتزام','اسم الالتزام','commitment','name','title'],ent:['الجهة','اسم الجهة','entity','institution'],cat:['التصنيف','category'],due:['تاريخ القسط','تاريخ الاستحقاق','due','due date','date'],amt:['المبلغ','مبلغ القسط','amount'],paid:['المدفوع','paid'],pd:['تاريخ الدفع','paid date','payment date'],acc:['الحساب','account']};
+function parseCSV(txt){txt=txt.replace(/^\uFEFF/,'');const f=txt.split(/\r?\n/)[0]||'',dl=[',',';','\t'].map(d=>[d,f.split(d).length]).sort((a,b)=>b[1]-a[1])[0][0],rows=[];let row=[],cur='',q=false;
+ for(let i=0;i<txt.length;i++){const ch=txt[i];if(q){if(ch=='"'){if(txt[i+1]=='"'){cur+='"';i++}else q=false}else cur+=ch}else if(ch=='"')q=true;else if(ch==dl){row.push(cur);cur=''}else if(ch=='\n'||ch=='\r'){if(ch=='\r'&&txt[i+1]=='\n')i++;row.push(cur);cur='';if(row.some(x=>x.trim()!==''))rows.push(row);row=[]}else cur+=ch}
+ row.push(cur);if(row.some(x=>x.trim()!==''))rows.push(row);return rows}
+function pdate(s){s=lat(s).trim();if(isD(s))return s;let m=/^(\d{4})[\/.](\d{1,2})[\/.](\d{1,2})$/.exec(s);if(m){const r=`${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;return isD(r)?r:''}
+ m=/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})$/.exec(s);if(m){let a=+m[1],b=+m[2];if(b>12&&a<=12)[a,b]=[b,a];const r=`${m[3]}-${String(b).padStart(2,'0')}-${String(a).padStart(2,'0')}`;return isD(r)?r:''}return''}
+const catOf=n=>{const x=nz(n);if(!x)return'other';const c=db.cats.find(c=>nz(c.n||'')==x||(c.k&&['ar','en'].some(l=>nz((D['c_'+c.k]||[])[l=='ar'?0:1])==x))||c.id==n);return c?c.id:null};
+const fpOf=(n,e,ds,tot)=>nz(n)+'|'+nz(e)+'|'+[...ds].sort()[0]+'|'+tot;
+function impBuild(rows,mk){
+ const h=rows[0].map(x=>nz(x)),I={};Object.keys(HM).forEach(k=>{I[k]=h.findIndex(x=>HM[k].some(a=>nz(a)==x))});
+ const miss=['name','ent','due','amt'].filter(k=>I[k]<0);if(miss.length)return{fatal:miss.map(k=>HM[k][0]).join('، ')};
+ const G=new Map();
+ rows.slice(1).forEach((r,n)=>{const line=n+2,g=k=>I[k]<0?'':String(r[I[k]]??'').trim(),name=g('name'),en=g('ent'),dd=pdate(g('due')),am=g('amt')?parse(g('amt')):NaN,e=[];
+  if(!name)e.push('name');if(!en)e.push('ent');if(!dd)e.push('date');if(isNaN(am)||am<=0)e.push('amount');
+  let pa=0,pdt='',acc='';if(g('paid')){pa=parse(g('paid'));if(isNaN(pa)||pa<0)e.push('paid');else if(pa>0){pdt=pdate(g('pd'));acc=g('acc');if(!pdt||pdt>today)e.push('pdate');if(!db.accs.find(a=>nz(a.n)==nz(acc)))e.push('acct');if(!isNaN(am)&&pa>am)e.push('paidgt')}}
+  const key=nz(name)+'|'+nz(en);if(!G.has(key))G.set(key,{name,en,cat:g('cat'),rows:[],errs:[]});const x=G.get(key);x.rows.push({line,d:dd,a:am,pa,pd:pdt,acc});if(e.length)x.errs.push({line,e})});
+ const exist=new Set(db.coms.map(c=>{const l=insOf(c).filter(i=>!i.x);return fpOf(c.n,db.ents.find(e=>e.id==c.e)?.n||'',l.map(i=>i.d),l.reduce((s,i)=>s+i.a,0))}));
+ const out=[...G.values()].map(g=>{const ent=db.ents.find(e=>nz(e.n)==nz(g.en)),cat=catOf(g.cat),tot=g.rows.reduce((s,r)=>s+(r.a||0),0);let status='ok';const msgs=[];
+  if(g.errs.length){status='err';g.errs.slice(0,6).forEach(x=>msgs.push(`#${x.line}: `+x.e.map(k=>t('ie_'+k)).join('، ')))}
+  else{if(!ent&&!mk){status='err';msgs.push(t('ie_noent'))}
+   if(cat===null)msgs.push(t('iw_cat'));
+   if(exist.has(fpOf(g.name,g.en,g.rows.map(r=>r.d),tot)))status='dup'}
+  return{...g,ent,cat:cat||'other',tot,status,msgs}});
+ return{groups:out}}
+function impPick(f){if(!f)return;f.arrayBuffer().then(b=>{let tx;try{tx=new TextDecoder('utf-8',{fatal:true}).decode(b)}catch(e){tx=new TextDecoder('windows-1256').decode(b)}
+ const rows=parseCSV(tx);if(rows.length<2)return err(t('ie_empty'));IMP={file:f.name,rows,mk:true,res:impBuild(rows,true)};draw()})}
+function impPage(){
+ const last=db.imp.filter(x=>!x.u).slice(-1)[0],r=IMP&&IMP.res;
+ return`<h2>${t('imp')}</h2><div class="card"><p class="k">${t('imp_help')}</p><p><button class="btn o" onclick="impTemplate()">${t('imp_tpl')}</button> ${last?`<button class="btn s o" onclick="impUndo()">${pend=='iu'?t('cfm'):t('imp_undo')}</button>`:''}</p>
+ <label>${t('imp_file')}<input data-keep type="file" accept=".csv,.txt" onchange="impPick(this.files[0])"></label>
+ ${IMP?`<label style="display:flex;gap:8px;align-items:center"><input data-keep type="checkbox" style="width:auto" ${IMP.mk?'checked':''} onchange="IMP.mk=this.checked;IMP.res=impBuild(IMP.rows,IMP.mk);draw()"> ${t('imp_mk')}</label>`:''}</div><br>`
+ +(r?(r.fatal?`<div class="err">${t('ie_cols')}: ${esc(r.fatal)}</div>`:`<h3>${t('imp_prev')} — ${esc(IMP.file)}</h3>`+tbl(['name','ent','cnt','total','status','note'],r.groups.map(g=>`<tr><td>${esc(g.name)}</td><td>${esc(g.en)}</td><td>${g.rows.length}</td><td>${fmt(g.tot)}</td><td>${g.status=='ok'?chip('completed').replace(t('c_completed'),t('imp_ok')):g.status=='dup'?`<span class="chip partial">${t('imp_dup')}</span>`:`<span class="chip overdue">${t('imp_err')}</span>`}</td><td style="white-space:normal">${g.msgs.map(esc).join('<br>')}</td></tr>`).join(''))+`<p><button class="btn g" onclick="impRun()" ${r.groups.some(g=>g.status=='ok')?'':'disabled'}>${t('imp_run')} (${r.groups.filter(g=>g.status=='ok').length})</button></p>`):'')}
+function impTemplate(){const q=v=>'"'+String(v).replace(/"/g,'""')+'"',rows=[['الالتزام','الجهة','التصنيف','تاريخ القسط','المبلغ','المدفوع','تاريخ الدفع','الحساب'],['تمويل سيارة','مصرف الراجحي','سيارة','2026-01-15','1500','1500','2026-01-14',db.accs[0]?.n||'حساب'],['تمويل سيارة','مصرف الراجحي','سيارة','2026-02-15','1500','','','']];dl('\ufeff'+rows.map(r=>r.map(q).join(',')).join('\n'),'import-template.csv','text/csv')}
+function impRun(){
+ if(!IMP||!IMP.res||!IMP.res.groups)return;const batch={id:id(),ts:Date.now(),file:IMP.file,cids:[],pids:[],eids:[],alids:[]},nc=[],ni=[],np=[],na=[],ne=[];
+ IMP.res.groups.filter(g=>g.status=='ok').forEach(g=>{let e=g.ent||ne.find(x=>nz(x.n)==nz(g.en));if(!e){e={id:id(),n:g.en,k:'oth'};ne.push(e);batch.eids.push(e.id)}
+  const c={id:id(),n:g.name,e:e.id,k:g.cat};nc.push(c);batch.cids.push(c.id);
+  g.rows.sort((a,b)=>a.d<b.d?-1:1).forEach(r=>{const i={id:id(),c:c.id,a:r.a,d:r.d,o:r.d};ni.push(i);if(r.pa>0){const a0=db.accs.find(x=>nz(x.n)==nz(r.acc)),p={id:id(),a:a0.id,d:r.pd,m:'transfer',nt:'import',v:false},al={id:id(),p:p.id,i:i.id,a:r.pa};np.push(p);na.push(al);batch.pids.push(p.id);batch.alids.push(al.id)}})});
+ if(!nc.length)return;db.ents.push(...ne);db.coms.push(...nc);db.ins.push(...ni);db.pays.push(...np);db.al.push(...na);db.imp.push(batch);
+ logE('import','import',batch.id,'',`${IMP.file} · ${nc.length} / ${ni.length}`);IMP=null;save();OKM=t('imp_done')+': '+nc.length;draw()}
+function impUndo(){two('iu',()=>{const b=db.imp.filter(x=>!x.u).slice(-1)[0];if(!b)return;const ids=db.ins.filter(i=>b.cids.includes(i.c)).map(i=>i.id);
+ if(db.al.some(a=>ids.includes(a.i)&&!b.alids.includes(a.id))||db.set.some(s=>b.cids.includes(s.c)))return err(t('e_undo'));
+ db.al=db.al.filter(a=>!b.alids.includes(a.id));db.pays=db.pays.filter(p=>!b.pids.includes(p.id));db.ins=db.ins.filter(i=>!b.cids.includes(i.c));db.sus=db.sus.filter(x=>!b.cids.includes(x.c));db.coms=db.coms.filter(c=>!b.cids.includes(c.id));
+ db.ents=db.ents.filter(e=>!b.eids.includes(e.id)||db.coms.some(c=>c.e==e.id));b.u=1;logE('undo_import','import',b.id,'',b.file);save();draw()})}
+function logPage(){return`<h2>${t('log')}</h2>`+tbl(['date','act','note'],logRows(db.log.slice(-300)))}
+function coms(){
+ const rows=db.coms.map(c=>({c,s:sum(c)})).filter(x=>(!Q||nz(x.c.n+' '+(db.ents.find(e=>e.id==x.c.e)?.n||'')).includes(nz(Q)))&&(!F||x.s.status==F));
+ return`<div class="top"><h2>${t('coms')}</h2><span><button class="btn g" onclick="go('new')">+ ${t('new')}</button> <button class="btn g" onclick="go('rec')">+ ${t('rec_new')}</button></span></div>
+ <div class="f"><label><input id="q" placeholder="${t('search')}" value="${esc(Q)}" oninput="Q=this.value;draw();$('#q').focus()"></label>
+ <label><select onchange="F=this.value;draw()"><option value="">${t('all')}</option>${['active','scheduled','completed','suspended','cancelled'].map(s=>`<option value="${s}" ${F==s?'selected':''}>${t('c_'+s)}</option>`).join('')}</select></label></div>
+ ${tbl(['name','ent','cat','total','paid','rem','status','start','end'],rows.map(({c,s})=>`<tr class="l" onclick="go('com:${c.id}')"><td>${esc(c.n)}</td><td>${esc(db.ents.find(e=>e.id==c.e)?.n)} <span class="k">${tyOf(c.e)}</span></td><td>${esc(nm(db.cats.find(e=>e.id==c.k)||{},'c_'))}</td><td>${fmt(s.tot)}</td><td>${fmt(s.p)}</td><td>${fmt(s.rem)}</td><td>${chip(s.status)}${s.od?` <span class="chip overdue">${t('s_overdue')} ${s.od}</span>`:''}</td><td>${s.start}</td><td>${s.end}</td></tr>`).join(''))}`}
+const actBtn=(k,l,i2)=>`<button class="btn s o" onclick="ACT={k:'${k}'${i2?`,i:'${i2}'`:''}};draw()">${t(l)}</button>`;
+function actPanel(c,s){
+ if(!ACT)return'';const k=ACT.k,i=ACT.i&&db.ins.find(x=>x.id==ACT.i),R=`<label>${t('reason')}*<input id="ac_r"></label>`;let f='';
+ if(k=='defer')f=`<label>${t('newdate')}*<input id="ac_d" type="date" value="${i.d}"></label>${R}`;
+ else if(k=='amount')f=`<label>${t('newamt')}*<input id="ac_a" inputmode="decimal" value="${(i.a/100).toFixed(2)}"></label>${R}`;
+ else if(k=='suspend')f=`<label>${t('susp_start')}*<input id="ac_d" type="date" value="${today}"></label><label>${t('susp_plan')}<input id="ac_p" type="date"></label>${R}`;
+ else if(k=='resume')f=`<label>${t('res_date')}*<input id="ac_d" type="date" value="${today}"></label><label>${t('res_how')}<select id="ac_m"><option value="keep">${t('res_keep')}</option><option value="shift">${t('res_shift')}</option></select></label><label>${t('res_months')}<input id="ac_n" type="number" min="1" max="60" value="1"></label>`;
+ else if(k=='rule')f=`<label>${t('rule_eff')}*<input id="ac_d" type="date" value="${today}"></label><label>${t('newamt')}*<input id="ac_a" inputmode="decimal"></label>${R}`;
+ else if(k=='endrec')f=`<label>${t('rec_end')}*<input id="ac_d" type="date" value="${today}"></label>${R}`;
+ else if(k=='settle')f=setPanel(c,s);
+ else f=R;
+ return`<div class="card"><h3>${t('a_'+k)}${i?' — '+i.d:''}</h3><div class="f">${f}</div><button class="btn g" onclick="doAct()">${t('confirm')}</button> <button class="btn o" onclick="ACT=null;draw()">${t('close')}</button></div><br>`}
+
+function doAct(){
+ const c=db.coms.find(x=>x.id==R.split(':')[1]);if(!c||!ACT)return;const k=ACT.k,i=ACT.i&&db.ins.find(x=>x.id==ACT.i),why=val('ac_r').trim(),need=()=>!why&&(err(t('e_reason')),true),det=x=>x+(why?' · '+why:'');
+ if(k=='defer'){if(need())return;const d=val('ac_d');if(!isD(d)||d==i.d)return err(t('e_date'));if(i.x||remOf(i)<=0)return err(t('e_locked'));const o=i.d;i.d=d;logE(d>o?'defer':'reschedule','installment',i.id,c.id,det(`${o} → ${d}`))}
+ else if(k=='amount'){if(need())return;const a=parse(val('ac_a'));if(isNaN(a)||a<=0||a==i.a)return err(t('e_num'));if(i.x||remOf(i)<=0)return err(t('e_locked'));if(a<covOf(i))return err(t('e_covered'));const o=i.a;i.a=a;logE('amount_edit','installment',i.id,c.id,det(`${fmt(o)} → ${fmt(a)}`))}
+ else if(k=='cancel'){if(need())return;if(covOf(i)>0)return err(t('e_cov_cancel'));if(liveIns(c).length<=1)return err(t('e_last'));i.x=1;i.xr=why;logE('cancel_installment','installment',i.id,c.id,det(i.d))}
+ else if(k=='restore'){if(need())return;if(db.set.some(s=>s.c==c.id&&!s.v))return err(t('e_settled'));delete i.x;delete i.xr;logE('restore_installment','installment',i.id,c.id,det(i.d))}
+ else if(k=='cancelc'){if(need())return;c.cx=Date.now();c.cxr=why;logE('cancel_commitment','commitment',c.id,c.id,why)}
+ else if(k=='restorec'){if(need())return;delete c.cx;delete c.cxr;logE('restore_commitment','commitment',c.id,c.id,why)}
+ else if(k=='suspend'){if(need())return;const s0=val('ac_d'),p0=val('ac_p');if(!isD(s0)||(p0&&(!isD(p0)||p0<s0)))return err(t('e_date'));if(db.sus.some(x=>x.c==c.id&&!x.v&&!x.r))return err(t('e_overlap'));db.sus.push({id:id(),c:c.id,s:s0,pr:p0||'',r:'',act:'',why,v:false});logE('suspend','commitment',c.id,c.id,det(s0))}
+ else if(k=='resume'){const sus=db.sus.find(x=>x.c==c.id&&!x.v&&!x.r),r0=val('ac_d'),m=val('ac_m'),n=parseInt(val('ac_n')||'0');if(!sus||!isD(r0)||r0<sus.s)return err(t('e_date'));
+  if(m=='shift'){if(!(n>=1&&n<=60))return err(t('e_num'));let cnt=0;liveIns(c).forEach(x=>{if(remOf(x)>0){x.d=addM(x.d,n);cnt++}});logE('shift','commitment',c.id,c.id,`${cnt} × +${n}`)}
+  sus.r=r0;sus.act=m;logE('resume','commitment',c.id,c.id,`${r0} · ${m}`)}
+ else if(k=='rule'){if(need())return;const ef=val('ac_d'),a=parse(val('ac_a'));if(!isD(ef)||isNaN(a)||a<=0)return err(t('e_num'));const last=c.rr[c.rr.length-1];if(ef<=last.ef)return err(t('e_rule_order'));
+  if(db.ins.some(i=>i.c==c.id&&i.gp&&i.gp>=ef&&covOf(i)>0))return err(t('e_retro'));const r={id:id(),ef,a};c.rr.push(r);let n=0;db.ins.forEach(i=>{if(i.c==c.id&&i.gp&&i.gp>=ef&&!i.x&&covOf(i)==0){i.a=a;i.rid=r.id;n++}});genRec(c);logE('rule_change','commitment',c.id,c.id,`${fmt(a)} ← ${ef} (${n}) · ${why}`)}
+ else if(k=='endrec'){if(need())return;const e=val('ac_d');if(!isD(e)||e<c.an)return err(t('e_date'));c.re=e;let n=0;db.ins.forEach(i=>{if(i.c==c.id&&i.gp&&i.gp>e&&!i.x&&covOf(i)==0){i.x=1;i.xr=t('end_note');n++}});logE('end_recurrence','commitment',c.id,c.id,`${e} (${n}) · ${why}`)}
+ else if(k=='settle'){if(!doSettle(c))return}
+ ACT=null;save();draw()}
+function delC(cid){two('delc',()=>{const c=db.coms.find(x=>x.id==cid);if(!c)return;const ids=db.ins.filter(i=>i.c==cid).map(i=>i.id);
+ if(db.al.some(a=>ids.includes(a.i))||db.set.some(s=>s.c==cid))return err(t('e_nodel'));
+ db.coms=db.coms.filter(x=>x.id!=cid);db.ins=db.ins.filter(i=>i.c!=cid);db.sus=db.sus.filter(x=>x.c!=cid);logE('delete_commitment','commitment',cid,'',c.n);save();go('coms')})}
+function com(cid){
+ const c=db.coms.find(x=>x.id==cid);if(!c)return coms();const s=sum(c),pc=s.tot?Math.round((s.p+s.w)*100/s.tot):0,live=!c.cx,sus=db.sus.find(x=>x.c==c.id&&!x.v&&!x.r);
+ const ps=db.al.filter(a=>s.all.some(i=>i.id==a.i)).map(a=>({a,p:db.pays.find(p=>p.id==a.p),i:s.all.find(i=>i.id==a.i)})).sort((x,y)=>x.p.d<y.p.d?1:-1);
+ const noPay=!db.al.some(a=>s.all.some(i=>i.id==a.i))&&!db.set.some(x=>x.c==c.id);
+ const rowBtns=(i)=>{if(!live)return'';if(i.x)return actBtn('restore','a_restore',i.id);const r=remOf(i);return(r>0?`<button class="btn s" onclick="go('pay:${i.id}')">${t('pnow')}</button> ${actBtn('defer','a_defer',i.id)} ${actBtn('amount','a_amount',i.id)} `:'')+(covOf(i)==0?actBtn('cancel','a_cancel',i.id):'')};
+ const top=`<div class="top"><h2>${esc(c.n)} ${chip(s.status)}${s.od?` <span class="chip overdue">${t('s_overdue')} ${s.od}</span>`:''}</h2><button class="btn o" onclick="go('coms')">←</button></div>`;
+ const cbtn=live?`${sus?actBtn('resume','a_resume'):actBtn('suspend','a_susp')} ${setBtn(c,s)} ${recBtn(c)} ${actBtn('cancelc','a_cancelc')}`:actBtn('restorec','a_restorec');
+ return top+recInfo(c)+`<p class="k">${esc(db.ents.find(e=>e.id==c.e)?.n)} · ${tyOf(c.e)}${c.cx?` · ${t('a_cancelc')}: ${esc(c.cxr)}`:''}${sus?` · ${t('a_susp')}: ${sus.s}${sus.pr?' → '+sus.pr:''}`:''}</p>
+ <div class="grid"><div class="card"><div class="k">${t('total')}</div><div class="v">${fmt(s.tot)}</div></div><div class="card"><div class="k">${t('paid')}</div><div class="v paid">${fmt(s.p)}</div></div>${s.w?`<div class="card"><div class="k">${t('waived')}</div><div class="v">${fmt(s.w)}</div></div>`:''}<div class="card"><div class="k">${t('rem')}</div><div class="v">${fmt(s.rem)}</div></div><div class="card"><div class="bar"><i style="width:${pc}%"></i></div><div class="k">${pc}%</div></div></div>
+ <p>${cbtn} ${noPay?`<button class="btn s o" onclick="delC('${c.id}')">${pend=='delc'?t('cfm'):t('a_del')}</button>`:''}</p>${actPanel(c,s)}
+ <h3>${t('inst')}</h3>${tbl(['#','due','amt','paid','rem','status',''],s.all.map((i,n)=>{const p=paid(i),post=i.d>i.o;return`<tr ${i.x?'style="opacity:.55"':''}><td>${n+1}</td><td>${post?`<s class="k">${i.o}</s> `:''}${i.d}</td><td>${fmt(i.a)}</td><td>${fmt(p)}</td><td>${fmt(remOf(i))}</td><td>${chip(st(i))}${post?` <span class="chip partial">${t('p_post')}</span>`:''}${wvOf(i)>0?` <span class="chip paid">${t('p_settled')}</span>`:''}${p>0&&remOf(i)>0?` <span class="chip partial">${t('partial')}</span>`:''}${i.x?` <span class="k">${esc(i.xr)}</span>`:''}</td><td style="white-space:normal">${rowBtns(i)}</td></tr>`}).join(''))}
+ ${setSummary(c)}<h3>${t('pays')}</h3>${tbl(['date','amt','acc','status',''],ps.map(({a,p})=>`<tr><td>${p.d}</td><td>${fmt(a.a)}</td><td>${esc(db.accs.find(x=>x.id==p.a)?.n)}</td><td>${p.v?`<span class="chip overdue">${t('voided')}</span>`:''}</td><td>${p.v?'':`<button class="btn s o" onclick="voidP('${p.id}')">${pend=='v'+p.id?t('cfm'):t('void')}</button>`}</td></tr>`).join(''))}
+ <h3>${t('log_title')}</h3>${tbl(['date','act','note'],logRows(db.log.filter(e=>e.root==c.id)))}`}
+// ---- early settlement: cash paid and waived amount are kept strictly separate ----
+const setBtn=(c,s)=>(!c.rr&&!c.cx&&s.rem>0&&!db.set.some(x=>x.c==c.id&&!x.v))?actBtn('settle','a_settle'):'';
+const setPanel=(c,s)=>`<label>${t('date')}*<input id="st_d" type="date" value="${today}" max="${today}"></label><label>${t('st_cash')}<input id="st_c" inputmode="decimal" value="0"></label><label>${t('acc')}<select id="st_a">${opt(db.accs,'',a=>a.n)}</select></label><label>${t('meth')}<select id="st_m">${['transfer','mada','card','cash','cheque'].map(m=>`<option value="${m}">${t('m_'+m)}</option>`).join('')}</select></label><label>${t('reason')}*<input id="ac_r"></label><p class="k">${t('rem')}: ${fmt(s.rem)}</p>`;
+function doSettle(c){
+ const s=sum(c),d=val('st_d'),ac=val('st_a'),why=val('ac_r').trim(),cash=val('st_c')===''?0:parse(val('st_c')),f=m=>(err(t(m)),false);
+ if(!why)return f('e_reason');if(c.rr)return f('e_nosettle');if(db.set.some(x=>x.c==c.id&&!x.v))return f('e_overlap2');
+ if(!isD(d)||d>today)return f('e_future');if(isNaN(cash)||cash<0||cash>s.rem)return f('e_num');
+ const a0=db.accs.find(x=>x.id==ac);if(cash>0&&!a0)return f('e_acc');if(cash>0&&a0.od&&d<a0.od)return f('e_before');
+ const open=s.l.filter(i=>remOf(i)>0).sort((a,b)=>a.d<b.d?-1:1);if(!open.length)return f('e_num');
+ const set={id:id(),c:c.id,d,why,v:false};db.set.push(set);let left=cash,pid=null;
+ if(cash>0){pid=id();db.pays.push({id:pid,a:ac,d,m:val('st_m'),nt:why,v:false})}
+ open.forEach(i=>{const r=remOf(i),cp=Math.min(r,left);left-=cp;if(cp>0)db.al.push({id:id(),p:pid,i:i.id,a:cp,s:set.id});if(r-cp>0)db.wv.push({id:id(),s:set.id,i:i.id,a:r-cp})});
+ logE('settle','commitment',c.id,c.id,`${t('st_cash')} ${fmt(cash)} · ${t('waived')} ${fmt(s.rem-cash)} · ${why}`);return true}
+const voidSet=sid=>two('vs'+sid,()=>{const x=db.set.find(y=>y.id==sid);if(!x)return;x.v=true;logE('void_settlement','commitment',x.c,x.c,x.why);save();draw()});
+const setSummary=c=>{const l=db.set.filter(x=>x.c==c.id);if(!l.length)return'';return`<h3>${t('a_settle')}</h3>`+tbl(['date','st_cash','waived','status','note',''],l.map(x=>{const cash=db.al.filter(a=>a.s==x.id&&!pv(a.p)).reduce((s,a)=>s+a.a,0),w=db.wv.filter(y=>y.s==x.id).reduce((s,y)=>s+y.a,0);return`<tr><td>${x.d}</td><td>${fmt(cash)}</td><td>${fmt(w)}</td><td>${x.v?`<span class="chip overdue">${t('voided')}</span>`:chip('completed')}</td><td style="white-space:normal">${esc(x.why)}</td><td>${x.v?'':`<button class="btn s o" onclick="voidSet('${x.id}')">${pend=='vs'+x.id?t('cfm'):t('void')}</button>`}</td></tr>`}).join(''))};
+
+function nw(){
+ return`<div class="top"><h2>${t('new')}</h2></div><div class="card"><div class="f">
+ <label>${t('f_com')}*<input id="n"></label><label>${t('ent')}*<select id="e" onchange="$('#ety').value=tyOf(this.value)"><option value="">${t('pick')}</option>${entOpts()}</select></label><label>${t('etype')}<input id="ety" readonly placeholder="—"></label>
+ <label>${t('cat')}<select id="k">${opt(db.cats,'finance',c=>nm(c,'c_'))}</select></label><label>${t('total')}*<input id="tot" inputmode="decimal"></label>
+ <label>${t('n')}<input id="cnt" type="number" min="0" value="12"></label><label>${t('first')}*<input id="f" type="date"></label>
+ <label>${t('down')}<input id="dn" inputmode="decimal"></label><label>${t('downd')}<input id="dd" type="date"></label>
+ <label>${t('fin')}<input id="fn" inputmode="decimal"></label><label>${t('find')}<input id="fd" type="date"></label></div>
+ <button class="btn g" onclick="saveC()">${t('save')}</button></div>`}
+function saveC(){
+ const n=val('n').trim(),en=val('e'),tot=parse(val('tot')),cnt=parseInt(val('cnt')||'0'),f=val('f'),dn=val('dn')?parse(val('dn')):0,fn=val('fn')?parse(val('fn')):0;
+ if(!n||!en||!f)return err(t('e_req'));if(isNaN(tot)||tot<=0||isNaN(dn)||isNaN(fn)||dn<0||fn<0||cnt<0)return err(t('e_num'));
+ const reg=tot-dn-fn;if(reg<0||(cnt==0&&reg!=0)||(cnt>0&&reg<cnt))return err(t('e_sum'));
+ const e=db.ents.find(x=>x.id==en);if(!e)return err(t('e_req'));
+ const c={id:id(),n,e:e.id,k:val('k')};db.coms.push(c);const add=(a,d)=>db.ins.push({id:id(),c:c.id,a,d,o:d});
+ if(dn>0)add(dn,val('dd')||f);
+ if(cnt>0){const b=Math.floor(reg/cnt);for(let k=0;k<cnt;k++)add(k<cnt-1?b:reg-b*(cnt-1),addM(f,k))}
+ if(fn>0)add(fn,val('fd')||(cnt>0?addM(f,cnt):f));
+ logE('create_commitment','commitment',c.id,c.id,c.n+' · '+fmt(tot));save();go('com:'+c.id)}
+function pay(iid){
+ if(!db.accs.length)return`<div class="card">${t('e_acc')} <button class="btn s" onclick="go('accs')">${t('accs')}</button></div>`;
+ const open=db.ins.filter(i=>!cancelledI(i)&&remOf(i)>0).sort((a,b)=>a.d<b.d?-1:1);
+ return`<div class="top"><h2>${t('pay')}</h2></div><div class="card"><div class="f">
+ <label>${t('acc')}*<select id="ac">${opt(db.accs,'',a=>a.n+' · '+fmt(bal(a)))}</select></label><label>${t('date')}*<input id="d" type="date" value="${today}" max="${today}"></label>
+ <label>${t('meth')}<select id="m">${['transfer','mada','card','cash','cheque'].map(m=>`<option value="${m}">${t('m_'+m)}</option>`).join('')}</select></label><label>${t('note')}<input id="nt"></label></div>
+ <label>${t('search')}<input id="pf" oninput="payFilter()"></label><h3>${t('inst')}</h3>${tbl(['name','due','rem','amt'],open.map(i=>`<tr data-n="${esc(nz(comOf(i)?.n))}"><td>${esc(comOf(i)?.n)}</td><td>${i.d}</td><td>${fmt(remOf(i))}</td><td><input class="al" data-i="${i.id}" inputmode="decimal" style="width:110px" value="${i.id==iid?(remOf(i)/100).toFixed(2):''}"></td></tr>`).join(''))}
+ <br><button class="btn g" onclick="saveP()">${t('save')}</button></div>`}
+function payFilter(){const q=nz($('#pf').value);document.querySelectorAll('.al').forEach(e=>{const r=e.closest('tr');r.style.display=!q||r.dataset.n.includes(q)?'':'none'})}
+function saveP(){
+ const d=val('d'),ac=val('ac'),a0=db.accs.find(x=>x.id==ac);if(!d||!a0)return err(t('e_req'));if(d>today)return err(t('e_future'));if(a0.od&&d<a0.od)return err(t('e_before'));
+ const rows=[...document.querySelectorAll('.al')].filter(x=>x.value.trim()).map(x=>({i:x.dataset.i,a:parse(x.value)}));
+ if(!rows.length)return err(t('e_req'));
+ for(const r of rows){const i=db.ins.find(x=>x.id==r.i);if(isNaN(r.a)||r.a<=0)return err(t('e_num'));if(cancelledI(i))return err(t('e_cancelled'));if(r.a>remOf(i))return err(t('e_over'))}
+ const p={id:id(),a:ac,d,m:val('m'),nt:val('nt'),v:false};db.pays.push(p);rows.forEach(r=>db.al.push({id:id(),p:p.id,i:r.i,a:r.a}));
+ logE('pay','payment',p.id,rows.length==1?db.ins.find(x=>x.id==rows[0].i).c:'',fmt(rows.reduce((s,r)=>s+r.a,0))+' · '+d);save();go('pays')}
+function voidP(pid){two('v'+pid,()=>{const p=db.pays.find(x=>x.id==pid);if(db.al.some(a=>a.p==pid&&a.s&&!setV(a.s)))return err(t('e_setv'));p.v=true;logE('void_payment','payment',pid,'',p.d);save();draw()})}
+
+
+function pays(){return`<div class="top"><h2>${t('pays')}</h2><button class="btn g" onclick="go('pay')">${t('pay')}</button></div>`+tbl(['date','amt','acc','meth','status',''],[...db.pays].sort((a,b)=>a.d<b.d?1:-1).map(p=>`<tr><td>${p.d}</td><td>${fmt(pt(p))}</td><td>${esc(db.accs.find(a=>a.id==p.a)?.n)}</td><td>${t('m_'+p.m)}</td><td>${p.v?`<span class="chip overdue">${t('voided')}</span>`:''}</td><td>${p.v?'':`<button class="btn s o" onclick="voidP('${p.id}')">${pend=='v'+p.id?t('cfm'):t('void')}</button>`}</td></tr>`).join(''))}
+function accs(){return`<h2>${t('accs')}</h2><div class="card"><div class="f"><label>${t('f_acc')}*<input id="an"></label><label>${t('type')}<select id="at">${['bank','wallet','cash','credit_card'].map(a=>`<option value="${a}">${t('at_'+a)}</option>`).join('')}</select></label><label>${t('open')}<input id="ao" inputmode="decimal" value="0"></label><label>${t('open_date')}<input id="aod" type="date" value="${today}" max="${today}"></label></div><button class="btn" onclick="addA()">${t('add')}</button></div><br>`+tbl(['name','type','bal'],db.accs.map(a=>`<tr class="l" onclick="go('acc:${a.id}')"><td>${esc(a.n)}</td><td>${t('at_'+a.t)}</td><td class="${bal(a)<0?'overdue':''}">${fmt(bal(a))}</td></tr>`).join(''))}
+function addA(){const n=val('an').trim(),o=parse(val('ao')),od=val('aod')||today;if(!n)return err(t('e_req'));if(isNaN(o))return err(t('e_num'));if(!isD(od)||od>today)return err(t('e_future'));
+ const a={id:id(),n,t:val('at'),o,od};db.accs.push(a);logE('create_account','account',a.id,'',n);save();draw()}
+function acc(aid){
+ const a=db.accs.find(x=>x.id==aid);if(!a)return accs();
+ const rows=[{d:a.od||'0000',k:'open',amt:a.o,ord:0}];
+ db.mv.filter(m=>m.a==aid).forEach(m=>rows.push({d:m.d,k:m.k=='adj'?(m.dir>0?'adj_in':'adj_out'):m.k,amt:m.dir*m.m,id:m.id,v:m.v,nt:m.why,src:'mv',ord:1}));
+ db.trf.forEach(x=>{if(x.f==aid)rows.push({d:x.d,k:'trf_out',amt:-x.m,id:x.id,v:x.v,nt:(db.accs.find(y=>y.id==x.t)?.n||'')+(x.nt?' · '+x.nt:''),src:'trf',ord:1});if(x.t==aid)rows.push({d:x.d,k:'trf_in',amt:x.m,id:x.id,v:x.v,nt:(db.accs.find(y=>y.id==x.f)?.n||'')+(x.nt?' · '+x.nt:''),src:'trf',ord:1})});
+ db.pays.filter(p=>p.a==aid).forEach(p=>rows.push({d:p.d,k:'payment',amt:-pt(p),v:p.v,nt:p.nt||'',ord:1}));
+ rows.sort((x,y)=>x.d<y.d?-1:x.d>y.d?1:x.ord-y.ord);let run=0;rows.forEach(r=>{if(!r.v)run+=r.amt;r.run=run});
+ const others=db.accs.filter(x=>x.id!=aid);
+ return`<div class="top"><h2>${esc(a.n)} <span class="v ${bal(a)<0?'overdue':''}">${fmt(bal(a))}</span></h2><button class="btn o" onclick="go('accs')">←</button></div>
+ <div class="card"><h3>${t('mv_title')}</h3><div class="f"><label>${t('type')}<select id="mk"><option value="deposit">${t('k_deposit')}</option><option value="withdrawal">${t('k_withdrawal')}</option><option value="adjust+">${t('k_adj_in')}</option><option value="adjust-">${t('k_adj_out')}</option></select></label>
+ <label>${t('date')}*<input id="md" type="date" value="${today}" max="${today}"></label><label>${t('amt')}*<input id="ma" inputmode="decimal"></label><label>${t('reason')}<input id="mr"></label></div><button class="btn" onclick="addMv('${aid}')">${t('add')}</button></div><br>
+ ${others.length?`<div class="card"><h3>${t('trf_title')}</h3><div class="f"><label>${t('to_acc')}*<select id="tt">${opt(others,'',x=>x.n)}</select></label><label>${t('date')}*<input id="td" type="date" value="${today}" max="${today}"></label><label>${t('amt')}*<input id="ta" inputmode="decimal"></label><label>${t('note')}<input id="tn"></label></div><button class="btn" onclick="addTrf('${aid}')">${t('add')}</button></div><br>`:''}
+ ${tbl(['date','type','amt','bal','note',''],rows.slice().reverse().map(r=>`<tr ${r.v?'style="opacity:.5;text-decoration:line-through"':''}><td>${r.d=='0000'?'':r.d}</td><td>${t('k_'+r.k)}</td><td class="${r.amt<0?'overdue':''}">${fmt(r.amt)}</td><td>${r.v?'':fmt(r.run)}</td><td style="white-space:normal">${esc(r.nt||'')}</td><td>${r.id&&!r.v?`<button class="btn s o" onclick="voidMv('${r.src}','${r.id}')">${pend=='m'+r.id?t('cfm'):t('void')}</button>`:''}</td></tr>`).join(''))}`}
+function chkMv(a,d,m){if(!isD(d)||d>today)return t('e_future');if(a.od&&d<a.od)return t('e_before');if(isNaN(m)||m<=0)return t('e_num');return''}
+function addMv(aid){const a=db.accs.find(x=>x.id==aid),k=val('mk'),d=val('md'),m=parse(val('ma')),why=val('mr').trim(),e0=chkMv(a,d,m);if(e0)return err(e0);if(k.startsWith('adjust')&&!why)return err(t('e_reason'));
+ const adj=k.startsWith('adjust');db.mv.push({id:id(),a:aid,k:adj?'adj':k,d,m,dir:k=='withdrawal'||k=='adjust-'?-1:1,why,v:false});logE(adj?'adjust':k,'account',aid,aid,`${fmt(m)} · ${d}${why?' · '+why:''}`);save();draw()}
+function addTrf(aid){const a=db.accs.find(x=>x.id==aid),to=db.accs.find(x=>x.id==val('tt')),d=val('td'),m=parse(val('ta')),e0=chkMv(a,d,m);if(e0)return err(e0);if(!to||to.id==aid)return err(t('e_acc2'));if(to.od&&d<to.od)return err(t('e_before'));
+ db.trf.push({id:id(),f:aid,t:to.id,d,m,nt:val('tn').trim(),v:false});logE('transfer','account',aid,aid,`${a.n} → ${to.n} · ${fmt(m)} · ${d}`);save();draw()}
+function voidMv(src,id2){two('m'+id2,()=>{const x=(src=='mv'?db.mv:db.trf).find(y=>y.id==id2);if(!x)return;x.v=true;logE(src=='mv'?'void_movement':'void_transfer','account',x.a||x.f,x.a||x.f,fmt(x.m)+' · '+x.d);save();draw()})}
+function ents(){return`<h2>${t('ents')}</h2><div class="card"><div class="f"><label>${t('f_ent')}*<input id="en"></label><label>${t('type')}<select id="et">${ET.map(x=>`<option value="${x}">${t('et_'+x)}</option>`).join('')}</select></label></div><button class="btn" onclick="addE()">${t('add')}</button></div><br>`+tbl(['name','type','cnt'],db.ents.map(e=>`<tr><td>${esc(e.n)}</td><td>${t('et_'+e.k)}</td><td>${db.coms.filter(c=>c.e==e.id).length}</td></tr>`).join(''))}
+function addE(){const n=val('en').trim();if(!n)return err(t('e_req'));if(db.ents.some(e=>nz(e.n)==nz(n)))return err(t('e_req'));db.ents.push({id:id(),n,k:val('et')});save();draw()}
+function cats(){return`<h2>${t('cats')}</h2><div class="card"><div class="f"><label>${t('f_cat')}*<input id="cn"></label></div><button class="btn" onclick="addC()">${t('add')}</button></div><br>`+tbl(['name','cnt'],db.cats.map(c=>`<tr><td>${esc(nm(c,'c_'))}</td><td>${db.coms.filter(x=>x.k==c.id).length}</td></tr>`).join(''))}
+function addC(){const n=val('cn').trim();if(!n)return err(t('e_req'));db.cats.push({id:id(),n});save();draw()}
+function reps(){const g=(arr,key,lab)=>tbl(['name','total','paid','waived','rem'],arr.map(o=>{const x=db.coms.filter(c=>c[key]==o.id).map(sum),T=x.reduce((s,y)=>s+y.tot,0),P=x.reduce((s,y)=>s+y.p,0),W=x.reduce((s,y)=>s+y.w,0);return T?`<tr><td>${esc(lab(o))}</td><td>${fmt(T)}</td><td>${fmt(P)}</td><td>${fmt(W)}</td><td>${fmt(T-P-W)}</td></tr>`:''}).join(''));
+ return`<div class="top"><h2>${t('reps')}</h2><span><button class="btn o s" onclick="csv('i')">${t('exp_i')}</button> <button class="btn o s" onclick="csv('p')">${t('exp_p')}</button> <button class="btn o s" onclick="csv2('m')">${t('exp_m')}</button> <button class="btn o s" onclick="csv2('t')">${t('exp_t')}</button> <button class="btn o s" onclick="csv2('l')">${t('exp_l')}</button></span></div>${monthReport()}<h3>${t('by_e')}</h3>${g(db.ents,'e',e=>e.n)}<h3>${t('by_c')}</h3>${g(db.cats,'k',c=>nm(c,'c_'))}`}
+function csv(w){const q=v=>{v=String(v??'');if(/^[=+\-@]/.test(v))v="'"+v;return'"'+v.replace(/"/g,'""')+'"'};
+ const rows=w=='i'?[['commitment','due','amount','paid','waived','remaining','status'],...db.ins.map(i=>[db.coms.find(c=>c.id==i.c)?.n,i.d,i.a/100,paid(i)/100,wvOf(i)/100,remOf(i)/100,st(i)])]:[['date','amount','account','method','voided'],...db.pays.map(p=>[p.d,pt(p)/100,db.accs.find(a=>a.id==p.a)?.n,p.m,p.v])];
+ dl('\ufeff'+rows.map(r=>r.map(q).join(',')).join('\n'),w+'.csv','text/csv')}
+function dl(s,n,m){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([s],{type:m}));a.download=n;a.click()}
+function sets(){const a=AUTH.acc,del=DEL&&Date.now()-DEL<30000;return`<h2>${t('sets')}</h2>
+<div class="card"><p><b>${esc(a.email)}</b></p><p class="k">${t('ac_local')}</p>
+ <button class="btn" onclick="L=L=='ar'?'en':'ar';try{localStorage.setItem('cm_l',L)}catch(e){}draw()">${t('lang')}</button>
+ <button class="btn o" onclick="TH=TH=='dark'?'light':'dark';try{localStorage.setItem('cm_t',TH)}catch(e){}draw()">${t('theme')}</button>
+ <button class="btn o" onclick="lockNow()">🔒 ${t('lock')}</button></div><br>
+<div class="card"><h3>${t('ac_chpw')}</h3><div class="f"><label>${t('ac_cur')}<input data-keep id="cp_o" type="password" autocomplete="current-password"></label><label>${t('lg_newpw')}<input data-keep id="cp_n" type="password" autocomplete="new-password"></label><label>${t('lg_pw2')}<input data-keep id="cp_n2" type="password" autocomplete="new-password"></label></div><button class="btn" onclick="changePw()">${t('ac_chpw')}</button>
+ <h3>${t('ac_newrc')}</h3><div class="f"><label>${t('ac_cur')}<input data-keep id="rc_p" type="password" autocomplete="current-password"></label></div><button class="btn o" onclick="AU.fromSettings=true;newRc()">${t('ac_newrc')}</button></div><br>
+<div class="card"><h3>${t('bk')}</h3><button class="btn" onclick="bkEnc()">${t('ac_bkenc')}</button>
+ <button class="btn o" onclick="dl(JSON.stringify(db),'backup.json','application/json');markBk()">${t('ac_bkplain')}</button>
+ <label style="display:inline-block">${t('rs')} (JSON) <input type="file" accept=".json" onchange="rest(this.files[0])"></label>
+ <button class="btn o" onclick="resetAll()">${pend=='reset'?t('cfm'):t('reset')}</button></div><br>
+<div class="card"><h3>${t('ac_del')}</h3>${del?`<p class="err">${t('ac_delconfirm')}</p><button class="btn" style="background:var(--bad)" onclick="delAcc()">${t('ac_delyes')}</button>`:`<div class="f"><label>${t('ac_cur')}<input data-keep id="dl_p" type="password" autocomplete="current-password"></label></div><button class="btn o" onclick="delAcc()">${t('ac_del')}</button>`}</div>`}
+function resetAll(){two('reset',()=>{db=freshDb();seedEnts();go('dash')})}
+function rest(f){if(!f)return;f.text().then(s=>{try{const x=JSON.parse(s);if(!x.coms||!x.ins||!x.pays)throw 0;db=normDb(x);save();draw()}catch(e){err(t('e_req'))}})}
+try{boot();window.__ok=true}catch(e){window.__show&&window.__show(e.message+'\n'+(e.stack||''))}
+</script>
+<script>if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}</script>
+</body></html>

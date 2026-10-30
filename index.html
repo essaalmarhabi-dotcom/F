@@ -36,8 +36,54 @@ th{color:var(--m);font-size:13px;font-weight:600}tr.l{cursor:pointer}tr.l:hover{
 #sync{margin-top:auto;padding:8px 12px;font-size:12px;color:#cfd2ff}
 .err{background:rgba(184,50,39,.12);color:var(--bad);padding:8px 12px;border-radius:10px;margin-bottom:10px}
 .bar{height:8px;background:var(--bd);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:var(--g)}
-@media(max-width:800px){input,select,textarea{font-size:16px}#sync{display:none}body{flex-direction:column-reverse}nav{width:100%;flex-direction:row;padding:6px;overflow-x:auto}nav h1{display:none}nav a{padding:8px 10px;font-size:13px;white-space:nowrap}main{padding:14px}}
-</style><script>
+/* 🛠️ التعديل الجذري والآمن للقائمة الجانبية المنسحبة في الجوال */
+@media(max-width:800px){
+  input,select,textarea{font-size:16px}
+  #sync{display:none !important}
+  body{flex-direction:row !important; position: relative;}
+  
+  /* تحويل القائمة لتصبح شريطاً نحيفاً ومخفياً تماماً على اليمين */
+  nav{
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 20px !important; /* تظهر فقط كخط رفيع أزرق على حافة الشاشة اليمنى */
+    height: 100vh !important;
+    background: var(--nav) !important;
+    z-index: 99999 !important;
+    flex-direction: column !important;
+    padding: 10px 0 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    transition: width 0.3s ease, padding 0.3s ease !important;
+    border-left: 3px solid var(--g) !important;
+  }
+  
+  /* بمجرد لمس الحافة اليمنى للشاشة أو تمرير الإصبع فوقها تفتح القائمة بالكامل */
+  nav:active, nav:hover, nav:focus-within {
+    width: 210px !important;
+    padding: 16px 10px !important;
+  }
+  
+  nav h1{font-size:15px !important; text-align:center; display:block !important;}
+  nav a{
+    padding: 10px 12px !important; 
+    font-size: 14px !important; 
+    white-space: nowrap !important;
+    width: 100% !important;
+    display: block !important;
+  }
+  
+  /* إعطاء مساحة مريحة للمحتوى الرئيسي لكي لا يختفي تحت الشريط الأزرق */
+  main{
+    padding: 14px 30px 14px 14px !important; 
+    width:100% !important; 
+    max-width:100% !important; 
+    box-sizing:border-box
+  }
+  .grid{grid-template-columns:1fr !important}
+}
 (function(){var box;function show(m){try{if(!box){box=document.createElement('div');box.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;background:#fff;color:#b00020;padding:20px;font:15px/1.7 -apple-system,Helvetica,sans-serif;direction:rtl;overflow:auto';(document.body||document.documentElement).appendChild(box)}
 box.innerHTML='<h3>\u26A0 \u062A\u0639\u0630\u0651\u0631 \u062A\u0634\u063A\u064A\u0644 \u0627\u0644\u0628\u0631\u0646\u0627\u0645\u062C</h3><p>\u0623\u0631\u0633\u0644 \u0644\u0642\u0637\u0629 \u0647\u0630\u0647 \u0627\u0644\u0634\u0627\u0634\u0629.</p><pre dir="ltr" style="white-space:pre-wrap;font-size:12px;color:#333">'+String(m).replace(/</g,'&lt;')+'\n'+navigator.userAgent+'\nsecure='+window.isSecureContext+'  protocol='+location.protocol+'  subtle='+!!(window.crypto&&window.crypto.subtle)+'</pre>'}catch(e){}}
 window.__ok=false;window.__show=show;
